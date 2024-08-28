@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+// @ts-ignore
 import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
 
 function addVariablesForColors({ addBase, theme }: any) {

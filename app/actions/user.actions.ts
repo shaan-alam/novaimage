@@ -32,3 +32,11 @@ export const deleteUser = async (id: string) => {
     }
   })
 }
+
+export const getUser = async (id: string) => {
+  return await db.user.findFirst({
+    where: {
+      id
+    }
+  })
+}

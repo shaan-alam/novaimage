@@ -1,7 +1,3 @@
-import { Webhook } from "svix";
-import { headers } from "next/headers";
-import { clerkClient, WebhookEvent } from "@clerk/nextjs/server";
-import { User } from "@prisma/client";
 import {
   createUser,
   CreateUserParams,
@@ -9,12 +5,14 @@ import {
   updateUser,
   UpdateUserParams,
 } from "@/app/actions/user.actions";
+import { clerkClient, WebhookEvent } from "@clerk/nextjs/server";
+import { headers } from "next/headers";
 import { NextResponse } from "next/server";
+import { Webhook } from "svix";
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
-  console.log(WEBHOOK_SECRET);
 
   if (!WEBHOOK_SECRET) {
     throw new Error(
@@ -73,7 +71,6 @@ export async function POST(req: Request) {
       email: email_addresses[0].email_address,
       first_name,
       last_name,
-      full_name: `${first_name} ${last_name}`,
       avatar: image_url,
       username,
     };
@@ -85,20 +82,19 @@ export async function POST(req: Request) {
           userId: newUser.id,
         },
       });
-      console.log(`${newUser.full_name} Just signed-up 🚀`);
+      console.log(`${newUser.first_name} Just signed-up 🚀`);
     }
     return NextResponse.json({ message: "OK", user: newUser });
   }
 
   // UPDATE
   if (eventType === "user.updated") {
-    console.log('updating')
+    console.log("updating");
     const { id, image_url, first_name, last_name, username } = evt.data;
 
     const user: UpdateUserParams["user"] = {
       first_name,
       last_name,
-      full_name: `${first_name} ${last_name}`,
       avatar: image_url,
       username,
     };

@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
   :root {
     --background: 204 49% 99%;
@@ -48,4 +47,10 @@
     --destructive-foreground: 0 0% 100%;
     --ring: 204 100% 50%;
   }
+}
+
+.grainy-background {
+  background-image: url("/images/grains.jpg");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }

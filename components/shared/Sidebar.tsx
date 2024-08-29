@@ -19,7 +19,7 @@ const Sidebar = ({ user }: { user: User }) => {
 
   return (
     <SidebarUI>
-      <SidebarBody>
+      <SidebarBody className="bg-gradient-to-br from-neutral-900 to-transparent bg-opacity-20">
         <div className="h-[95vh] flex flex-col">
           <div className="my-6 flex items-center space-x-2">
             <Image

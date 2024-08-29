@@ -28,15 +28,15 @@ export const updateUser = async ({ id, user }: UpdateUserParams) => {
 export const deleteUser = async (id: string) => {
   return await db.user.delete({
     where: {
-      id
-    }
-  })
-}
+      id,
+    },
+  });
+};
 
 export const getUser = async (id: string) => {
   return await db.user.findFirst({
     where: {
-      id
-    }
-  })
-}
+      clerkId: id,
+    },
+  });
+};

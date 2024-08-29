@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import {
   SidebarBody,
   SidebarLink,
@@ -9,7 +9,9 @@ import { UserButton } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { Theme } from "@clerk/types";
 import { User } from "@prisma/client";
+import { IconCoin } from "@tabler/icons-react";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const Sidebar = ({ user }: { user: User }) => {
@@ -45,9 +47,24 @@ const Sidebar = ({ user }: { user: User }) => {
               })}
             </ul>
           </div>
-          <div className="mt-auto flex items-center space-x-2">
-            <UserButton appearance={dark as Theme} />
-            <p className="text-gray-400">{user?.first_name} {user?.last_name}</p>
+          <div className="mt-auto">
+            <Link href="buy-credits">
+              <div className="flex items-center space-x-4 text-neutral-700 hover: dark:text-neutral-200 text-sm mb-6 hover:bg-neutral-700 rounded-xl py-2 px-2">
+                <IconCoin color="gold" />
+                <p>Buy Credits</p>
+              </div>
+            </Link>
+            <div className="flex items-center space-x-2 justify-between">
+              <div className="flex items-center space-x-2">
+                <UserButton appearance={dark as Theme} />
+                <p className="text-gray-300 font-medium">
+                  {user?.first_name} {user?.last_name}
+                </p>
+              </div>
+              <div className="flex items-center space-x-1">
+                <p className="text-gray-400 text-xs">10 Credits</p>
+              </div>
+            </div>
           </div>
         </div>
       </SidebarBody>

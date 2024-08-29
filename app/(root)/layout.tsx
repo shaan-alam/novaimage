@@ -7,6 +7,7 @@ const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
   const { userId } = auth();
 
   if (!userId) redirect("/sign-in");
+  console.log(userId)
 
   const user = await getUser(userId);
 

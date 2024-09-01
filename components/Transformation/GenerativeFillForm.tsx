@@ -11,6 +11,10 @@ import { aspectRatiosOptions } from "@/constants";
 import { AspectRatioFieldSelectType } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Transformation } from "@prisma/client";
+import {
+  IconPaintFilled
+} from "@tabler/icons-react";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useServerAction } from "zsa-react";
@@ -24,10 +28,8 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
+import DeleteTransformationDialog from "./DeleteTransformationDialog";
 import TransformedImage from "./TransformedImage";
-import Image from "next/image";
-import { getImageDimensions } from "@/lib/utils";
-import { IconPaint, IconPaintFilled } from "@tabler/icons-react";
 
 type GenerativeFillFormProps = {
   transformation: Transformation | null;
@@ -103,88 +105,94 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
           </>
         )}
       </div>
-      <div className="w-[30%] mt-12">
-        <div className="p-4 w-full rounded-xl border border-border shadow-lg bg-gradient-to-br from-accent/50 backdrop-blur-md to-transparent bg-opacity-[0.09]">
-          <Image
-            src={transformation?.thumbnail as string}
-            alt="Original Image"
-            height={72}
-            width={72}
-            className="my-6 rounded-md"
-          />
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Title</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Title" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="aspectRatio"
-                render={({ field }) => (
-                  <Select
-                    value={field.value}
-                    onValueChange={(value) => onSelectChange(value, field)}
+      {transformation && (
+        <div className="w-[30%] mt-12">
+          <div className="p-4 w-full rounded-xl border border-border shadow-lg bg-gradient-to-br from-[#182027] backdrop-blur-md to-transparent bg-opacity-[0.09]">
+            <Image
+              src={transformation?.thumbnail as string}
+              alt="Original Image"
+              height={72}
+              width={72}
+              className="my-6 rounded-md"
+            />
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)}>
+                <FormField
+                  control={form.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Title</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Title" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="aspectRatio"
+                  render={({ field }) => (
+                    <Select
+                      value={field.value}
+                      onValueChange={(value) => onSelectChange(value, field)}
+                    >
+                      <SelectTrigger className="w-full my-4">
+                        <SelectValue placeholder="Aspect Ratio" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {aspectRatiosOptions.map((ar) => (
+                          <SelectItem value={ar.ratio} key={ar.ratio}>
+                            {ar.ratio} {ar.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                <div className="grid grid-cols-3 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="width"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Width</FormLabel>
+                        <FormMessage />
+                        <Input type="number" placeholder="Width" {...field} />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="height"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Height</FormLabel>
+                        <FormMessage />
+                        <Input type="number" placeholder="Height" {...field} />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="mt-6 flex items-center space-x-4">
+                  <Button
+                    isLoading={isPending}
+                    disabled={!form.getValues().aspectRatio}
+                    className="w-full"
+                    icon={<IconPaintFilled size={15} />}
                   >
-                    <SelectTrigger className="w-full my-4">
-                      <SelectValue placeholder="Aspect Ratio" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {aspectRatiosOptions.map((ar) => (
-                        <SelectItem value={ar.ratio} key={ar.ratio}>
-                          {ar.ratio} {ar.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-              <div className="grid grid-cols-3 gap-4">
-                <FormField
-                  control={form.control}
-                  name="width"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Width</FormLabel>
-                      <FormMessage />
-                      <Input type="number" placeholder="Width" {...field} />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="height"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Height</FormLabel>
-                      <FormMessage />
-                      <Input type="number" placeholder="Height" {...field} />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <Button
-                isLoading={isPending}
-                disabled={!form.getValues().aspectRatio}
-                className="mt-6 flex space-x-1"
-                icon={<IconPaintFilled size={15} />}
-              >
-                <span>Apply Transformation</span>
-              </Button>
-            </form>
-          </Form>
+                    Apply Transformation
+                  </Button>
+                  <DeleteTransformationDialog
+                    transformationId={transformation?.id as string}
+                  />
+                </div>
+              </form>
+            </Form>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

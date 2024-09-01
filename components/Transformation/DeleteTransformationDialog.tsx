@@ -1,4 +1,4 @@
-import { deleteImage } from "@/app/actions/cloudinary.actions";
+import { deleteTransformation } from "@/app/actions/cloudinary.actions";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -9,29 +9,28 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { IconTrash, IconX } from "@tabler/icons-react";
-import { redirect, useRouter } from "next/navigation";
+import { IconTrash } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useServerAction } from "zsa-react";
 import { Button } from "../ui/button";
 
-type DeleteMediaDialogProps = {
-  publicId: string;
+type DeleteTransformationProps = {
+  transformationId: string;
 };
 
-const DeleteMediaDialog = ({ publicId }: DeleteMediaDialogProps) => {
+const DeleteTransformationDialog = ({ transformationId }: DeleteTransformationProps) => {
   const router = useRouter();
-  const { isPending, execute } = useServerAction(deleteImage);
+  const { isPending, execute } = useServerAction(deleteTransformation);
 
   const deleteImageHandler = async () => {
-    toast.promise(execute({ publicId }), {
+    toast.promise(execute({ id: transformationId }), {
       loading: "Deleting...",
-      success: () => {
+      success: (result) => {
         router.push("/generative-fill");
-        return <>Successfully deleted your image!</>;
+        return <>{result[0]?.message}</>;
       },
       error: (err) => {
-        console.log(err);
         return <>Could not delete your image!</>;
       },
     });
@@ -40,9 +39,13 @@ const DeleteMediaDialog = ({ publicId }: DeleteMediaDialogProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger>
-        <span className="p-2 rounded-full hover:scale-105 transition-all w-fit block absolute top-8 right-2">
-          <IconX className="text-gray-300" size={15} />
-        </span>
+        <Button
+          variant="secondary"
+          className="w-full"
+          icon={<IconTrash size={15} />}
+        >
+          Delete
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -69,4 +72,4 @@ const DeleteMediaDialog = ({ publicId }: DeleteMediaDialogProps) => {
   );
 };
 
-export default DeleteMediaDialog;
+export default DeleteTransformationDialog;

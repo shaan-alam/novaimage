@@ -55,7 +55,7 @@ export const uploadToCloudinary = createServerAction()
         transformationType: "gen-fill",
         transformationURL: "",
         userId: user.id,
-        thumbnail
+        thumbnail,
       },
     });
   });
@@ -107,15 +107,32 @@ export const applyTransformation = createServerAction()
     return transformation;
   });
 
-export const deleteImage = createServerAction()
+export const deleteTransformation = createServerAction()
   .input(
     z.object({
-      publicId: z.string(),
+      id: z.string(),
     })
   )
   .handler(async ({ input }) => {
-    const { publicId } = input;
+    const { id } = input;
 
-    await cloudinary.uploader.destroy(publicId);
-    return { message: "Your image has been successfully deleted!" };
+    const transformation = await db.transformation.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (!transformation) {
+      throw new ZSAError("NOT_FOUND");
+    }
+
+    await cloudinary.uploader.destroy(transformation.publicId);
+
+    await db.transformation.delete({
+      where: {
+        id,
+      },
+    });
+
+    return { message: "Deleted your transformation successfully!" };
   });

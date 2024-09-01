@@ -3,7 +3,7 @@ import { IconDropletHalf2 } from "@tabler/icons-react";
 
 const GenerativeFill = () => {
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto bg-[#12181D] p-12 border border-secondary rounded-xl">
       <h1 className="flex items-center text-white font-bold text-4xl">
         <IconDropletHalf2 color="white" />
         &nbsp; Generative Fill

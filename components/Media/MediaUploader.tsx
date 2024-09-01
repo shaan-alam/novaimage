@@ -6,7 +6,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Dropzone from "react-dropzone";
 import { useServerAction } from "zsa-react";
-import DeleteMediaDialog from "./DeleteMediaDialog";
 
 type MediaUploaderProps = {
   imageProps?: Transformation | null;
@@ -42,15 +41,14 @@ const MediaUploader = ({ imageProps }: MediaUploaderProps) => {
             <div
               {...getRootProps()}
               className={cn(
-                "h-[250px] w-full p-4 rounded-xl bg-secondary block transition-all",
+                "h-[250px] w-full p-4 rounded-xl block transition-all border border-border shadow-lg bg-background/30",
                 !imageProps?.imageURL ? "hover:scale-105 cursor-pointer" : ""
               )}
             >
-              <div className="h-full w-full rounded-xl border-2 border-dashed flex items-center justify-center">
+              <div className="h-full w-full rounded-xl border-2 border-dashed border-secondary flex items-center justify-center">
                 {imageProps?.imageURL && (
                   <>
                     <div className="p-2 rounded-lg relative">
-                      <DeleteMediaDialog publicId={imageProps?.publicId} />
                       <Image
                         src={imageProps?.imageURL}
                         height={300}

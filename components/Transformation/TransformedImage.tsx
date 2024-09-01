@@ -21,7 +21,7 @@ const TransformedImage = ({ data, aspectRatio }: TransformedImageProps) => {
 
   return (
     <>
-      {isLoading && <Skeleton className="w-full h-[400px] bg-[#12181D]" />}
+      {isLoading && <Skeleton className="w-full h-[400px]" />}
       <CldImage
         {...imageProps}
         alt="Transformation Image"

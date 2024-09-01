@@ -5,7 +5,7 @@ import { Theme } from "@clerk/types";
 
 export default function Page() {
   return (
-    <div className="h-screen">
+    <div className="h-screen bg-background">
       <Wavebackgound />
       <div className="flex h-screen relative w-full justify-center items-center">
         <SignIn

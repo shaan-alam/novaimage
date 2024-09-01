@@ -13,7 +13,7 @@ import { Webhook } from "svix";
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
-
+  console.log(WEBHOOK_SECRET);
   if (!WEBHOOK_SECRET) {
     throw new Error(
       "Please add WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local"
@@ -66,7 +66,7 @@ export async function POST(req: Request) {
     const { id, email_addresses, image_url, first_name, last_name, username } =
       evt.data;
 
-    const user: CreateUserParams = {
+    const user = {
       clerkId: id,
       email: email_addresses[0].email_address,
       first_name,
@@ -89,10 +89,9 @@ export async function POST(req: Request) {
 
   // UPDATE
   if (eventType === "user.updated") {
-    console.log("updating");
     const { id, image_url, first_name, last_name, username } = evt.data;
 
-    const user: UpdateUserParams["user"] = {
+    const user: Omit<UpdateUserParams["user"], "credits"> = {
       first_name,
       last_name,
       avatar: image_url,

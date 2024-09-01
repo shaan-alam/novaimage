@@ -2,15 +2,17 @@
 import { db } from "@/db";
 import { User } from "@prisma/client";
 
-export type CreateUserParams = Omit<User, "id">;
+export type CreateUserParams = Omit<User, "id" | "credits">;
 export type UpdateUserParams = {
   id: string;
-  user: Omit<User, "id" | "email" | "clerkId">;
+  user: Omit<User, "id" | "email" | "clerkId" | "credits" | "transformations">;
 };
 
 export const createUser = async (user: CreateUserParams) => {
   return await db.user.create({
-    data: { ...user },
+    data: {
+      ...user,
+    },
   });
 };
 
@@ -37,6 +39,14 @@ export const getUser = async (id: string) => {
   return await db.user.findFirst({
     where: {
       clerkId: id,
+    },
+  });
+};
+
+export const getUserByClerkId = async (clerkId: string) => {
+  return await db.user.findFirst({
+    where: {
+      clerkId,
     },
   });
 };

@@ -6,9 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Dropzone from "react-dropzone";
 import { useServerAction } from "zsa-react";
-import Loader from "../shared/Loader";
 import DeleteMediaDialog from "./DeleteMediaDialog";
-import { transform } from "next/dist/build/swc";
 
 type MediaUploaderProps = {
   imageProps?: Transformation | null;

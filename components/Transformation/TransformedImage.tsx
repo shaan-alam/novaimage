@@ -1,10 +1,9 @@
 "use client";
-import { cn, dataUrl, getImageHeight, getImageWidth } from "@/lib/utils";
+import { getImageHeight, getImageWidth } from "@/lib/utils";
+import { Transformation } from "@prisma/client";
 import { CldImage } from "next-cloudinary";
 import { useState } from "react";
 import { Skeleton } from "../ui/skeleton";
-import { PlaceholderValue } from "next/dist/shared/lib/get-img-props";
-import { Transformation } from "@prisma/client";
 
 type TransformedImageProps = {
   data: Transformation,
@@ -22,7 +21,7 @@ const TransformedImage = ({ data, aspectRatio }: TransformedImageProps) => {
 
   return (
     <>
-      {isLoading && <Skeleton className="w-full h-[400px]" />}
+      {isLoading && <Skeleton className="w-full h-[400px] bg-[#12181D]" />}
       <CldImage
         {...imageProps}
         alt="Transformation Image"

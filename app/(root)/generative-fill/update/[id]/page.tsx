@@ -17,7 +17,7 @@ const TransformationPage = async ({ params }: { params: { id: string } }) => {
   if (!transformation) redirect("/generative-fill");
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto bg-[#12181D] p-12 border border-secondary rounded-xl">
       <h1 className="flex items-center text-white font-bold text-2xl">
         <IconDropletHalf2 color="white" />
         &nbsp; Generative Fill

@@ -88,6 +88,7 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
   return (
     <div className="flex gap-8 mt-8">
       <div className="w-[70%]">
+        <h1 className="text-xl font-semibold mb-2">Transformation</h1>
         {!data && !isPending && (
           <Image
             alt="Original Image"
@@ -109,7 +110,7 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
         )}
       </div>
       {transformation && (
-        <div className="w-[30%] mt-12">
+        <div className="w-[30%] mt-6">
           <div className="p-4 w-full rounded-xl border border-border shadow-lg bg-gradient-to-br from-[#182027] backdrop-blur-md to-transparent bg-opacity-[0.09]">
             <Image
               src={transformation?.thumbnail as string}

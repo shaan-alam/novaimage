@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { aspectRatiosOptions, socialMediaPostDimensions } from "@/constants";
-import { AspectRatioFieldSelectType } from "@/types";
+import { AspectRatioKeyField } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Transformation } from "@prisma/client";
 import { IconPaintFilled } from "@tabler/icons-react";
@@ -38,8 +38,7 @@ type GenerativeFillFormProps = {
 const formSchema = z.object({
   title: z.string(),
   aspectRatio: z.string({ message: "Aspect Ratio is required!" }),
-  width: z.string(),
-  height: z.string(),
+  aspect_ratio_key: z.string(),
 });
 
 const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
@@ -48,47 +47,45 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      aspectRatio: "",
-      width: transformation?.original_width.toString(),
-      height: transformation?.original_height.toString(),
+      title: transformation?.title || "",
+      aspectRatio: transformation?.aspectRatio || "",
+      aspect_ratio_key: transformation?.aspect_ratio_key || "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const { aspectRatio, height, title, width } = values;
+    const { aspectRatio, title, aspect_ratio_key } = values;
 
     if (transformation) {
-      await execute({
+      const result = await execute({
         id: transformation?.id,
-        height: +height,
-        width: +width,
         publicId: transformation?.publicId as string,
         title,
         src: transformation?.imageURL as string,
         aspectRatio,
+        aspect_ratio_key,
       });
+      console.log(result);
     }
   };
 
-  const onSelectChange = (value: string, field: AspectRatioFieldSelectType) => {
+  const onSelectChange = (value: string, field: AspectRatioKeyField) => {
     let aspectRatio = [
       ...aspectRatiosOptions,
       ...socialMediaPostDimensions,
     ].find((ar) => ar.key === value);
 
     if (aspectRatio) {
-      form.setValue("height", aspectRatio?.dimensions.height.toString());
-      form.setValue("width", aspectRatio?.dimensions.width.toString());
-
-      field.onChange(value);
+      // form.setValue("height", aspectRatio?.dimensions.height.toString());
+      // form.setValue("width", aspectRatio?.dimensions.width.toString());
+      form.setValue("aspectRatio", aspectRatio?.ratio);
+      field.onChange(aspectRatio.key);
     }
   };
 
   return (
     <div className="flex gap-8 mt-8">
       <div className="w-[70%]">
-        <h1 className="text-xl font-semibold mb-2">Transformation</h1>
         {!data && !isPending && (
           <Image
             alt="Original Image"
@@ -114,7 +111,7 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
           <div className="p-4 w-full rounded-xl border border-border shadow-lg bg-gradient-to-br from-[#182027] backdrop-blur-md to-transparent bg-opacity-[0.09]">
             <Image
               src={transformation?.thumbnail as string}
-              alt="Original Image"
+              alt="Original Image Thumbnail"
               height={72}
               width={72}
               className="my-6 rounded-md"
@@ -136,7 +133,7 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
                 />
                 <FormField
                   control={form.control}
-                  name="aspectRatio"
+                  name="aspect_ratio_key"
                   render={({ field }) => (
                     <Select
                       value={field.value}
@@ -166,30 +163,6 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
                     </Select>
                   )}
                 />
-                <div className="grid grid-cols-3 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="width"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Width</FormLabel>
-                        <FormMessage />
-                        <Input type="number" placeholder="Width" {...field} />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="height"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Height</FormLabel>
-                        <FormMessage />
-                        <Input type="number" placeholder="Height" {...field} />
-                      </FormItem>
-                    )}
-                  />
-                </div>
                 <div className="mt-6 flex items-center space-x-4">
                   <Button
                     isLoading={isPending}

@@ -1,11 +1,12 @@
 import { ControllerRenderProps } from "react-hook-form";
 
-export type AspectRatioFieldSelectType = ControllerRenderProps<
+export type AspectRatioKeyField = ControllerRenderProps<
   {
-    title: string;
+    aspect_ratio_key: string;
     aspectRatio: string;
+    title: string;
     width: string;
     height: string;
   },
-  "aspectRatio"
+  "aspect_ratio_key"
 >;

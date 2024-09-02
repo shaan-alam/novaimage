@@ -1,7 +1,6 @@
 "use server";
 import { db } from "@/db";
 import { auth } from "@clerk/nextjs/server";
-import { Transformation } from "@prisma/client";
 import { v2 as cloudinary } from "cloudinary";
 import { getCldImageUrl } from "next-cloudinary";
 import { z } from "zod";
@@ -56,6 +55,7 @@ export const uploadToCloudinary = createServerAction()
         transformationURL: "",
         userId: user.id,
         thumbnail,
+        aspect_ratio_key: "",
       },
     });
   });
@@ -68,8 +68,7 @@ export const applyTransformation = createServerAction()
       publicId: z.string().min(1, { message: "Public ID is required" }),
       src: z.string().min(1, { message: "src is required" }),
       aspectRatio: z.string().min(1, { message: "Aspect Ratio is required" }),
-      height: z.number(),
-      width: z.number(),
+      aspect_ratio_key: z.string(),
     })
   )
   .handler(async ({ input }) => {
@@ -81,14 +80,12 @@ export const applyTransformation = createServerAction()
       throw new ZSAError("NOT_AUTHORIZED");
     }
 
-    const { id, aspectRatio, height, width, publicId, title } = input;
+    const { id, aspectRatio, publicId, title, aspect_ratio_key } = input;
 
     const transformationURL = getCldImageUrl({
       src: publicId,
       fillBackground: true,
       aspectRatio,
-      height,
-      width,
     });
 
     const transformation = db.transformation.update({
@@ -100,9 +97,7 @@ export const applyTransformation = createServerAction()
         transformationType: "genrative-fill",
         transformationURL,
         aspectRatio,
-        userId: user.id,
-        transformed_height: height, 
-        transformed_width: width
+        aspect_ratio_key: aspect_ratio_key as string,
       },
     });
 

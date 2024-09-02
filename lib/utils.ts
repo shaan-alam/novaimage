@@ -1,4 +1,4 @@
-import { aspectRatiosOptions, socialMediaPostDimensions } from "@/constants";
+import { Cloudinary } from "@cloudinary/url-gen";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -64,3 +64,18 @@ export const getImageDimensions = (
 
   return promise;
 };
+
+export async function convertImageURLToBase64(url: string) {
+  const response = await fetch(url);
+  const buffer = await response.arrayBuffer();
+  const data = await Buffer.from(buffer).toString("base64");
+  return `data:image/webp;base64,${data}`;
+}
+
+export const cld = new Cloudinary({
+  cloud: {
+    cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+    apiKey: process.env.CLOUDINARY_API_KEY,
+    apiSecret: process.env.CLOUDINARY_API_SECRET,
+  },
+});

@@ -19,7 +19,9 @@ type DeleteTransformationProps = {
   transformationId: string;
 };
 
-const DeleteTransformationDialog = ({ transformationId }: DeleteTransformationProps) => {
+const DeleteTransformationDialog = ({
+  transformationId,
+}: DeleteTransformationProps) => {
   const router = useRouter();
   const { isPending, execute } = useServerAction(deleteTransformation);
 
@@ -40,6 +42,7 @@ const DeleteTransformationDialog = ({ transformationId }: DeleteTransformationPr
     <AlertDialog>
       <AlertDialogTrigger>
         <Button
+          type="button"
           variant="secondary"
           className="w-full"
           icon={<IconTrash size={15} />}

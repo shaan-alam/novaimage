@@ -180,13 +180,13 @@ export const SidebarLink = ({
       className={cn(
         "flex items-center justify-start gap-2  group/sidebar",
         open && "p-2",
-        isActive ? "bg-neutral-700 rounded-xl" : "",
+        isActive ? "bg-primary rounded-xl text-white" : "text-neutral-400",
         className
       )}
       {...props}
     >
       <link.icon
-        className={cn("h-[30px] w-[30px] rounded-full text-gray-200 p-1")}
+        className={cn("h-[30px] w-[30px] rounded-full p-1", isActive ? "text-white": "text-neutral-400")}
       />
 
       <motion.span
@@ -194,7 +194,7 @@ export const SidebarLink = ({
           display: animate ? (open ? "inline-block" : "none") : "inline-block",
           opacity: animate ? (open ? 1 : 0) : 1,
         }}
-        className="text-neutral-700 dark:text-neutral-200 text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0"
+        className="text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0"
       >
         {link.label}
       </motion.span>

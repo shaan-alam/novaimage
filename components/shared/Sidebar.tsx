@@ -18,6 +18,7 @@ import { useState } from "react";
 
 const Sidebar = ({ user }: { user: User }) => {
   const pathname = usePathname();
+
   const [open, setOpen] = useState(false);
 
   return (
@@ -47,7 +48,7 @@ const Sidebar = ({ user }: { user: User }) => {
           <div>
             <ul>
               {SIDEBAR_LINKS.map((item) => {
-                const isActive = pathname === item.href;
+                const isActive = pathname.includes(item.href);
 
                 return (
                   <SidebarLink

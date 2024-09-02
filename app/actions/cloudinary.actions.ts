@@ -81,7 +81,7 @@ export const applyTransformation = createServerAction()
       throw new ZSAError("NOT_AUTHORIZED");
     }
 
-    const { id, src, aspectRatio, height, width, publicId, title } = input;
+    const { id, aspectRatio, height, width, publicId, title } = input;
 
     const transformationURL = getCldImageUrl({
       src: publicId,
@@ -101,6 +101,8 @@ export const applyTransformation = createServerAction()
         transformationURL,
         aspectRatio,
         userId: user.id,
+        transformed_height: height, 
+        transformed_width: width
       },
     });
 

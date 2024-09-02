@@ -3,17 +3,17 @@ import { applyTransformation } from "@/app/actions/cloudinary.actions";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { aspectRatiosOptions } from "@/constants";
+import { aspectRatiosOptions, socialMediaPostDimensions } from "@/constants";
 import { AspectRatioFieldSelectType } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Transformation } from "@prisma/client";
-import {
-  IconPaintFilled
-} from "@tabler/icons-react";
+import { IconPaintFilled } from "@tabler/icons-react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -72,7 +72,10 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
   };
 
   const onSelectChange = (value: string, field: AspectRatioFieldSelectType) => {
-    const aspectRatio = aspectRatiosOptions.find((ar) => ar.ratio === value);
+    let aspectRatio = [
+      ...aspectRatiosOptions,
+      ...socialMediaPostDimensions,
+    ].find((ar) => ar.key === value);
 
     if (aspectRatio) {
       form.setValue("height", aspectRatio?.dimensions.height.toString());
@@ -142,11 +145,22 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
                         <SelectValue placeholder="Aspect Ratio" />
                       </SelectTrigger>
                       <SelectContent>
-                        {aspectRatiosOptions.map((ar) => (
-                          <SelectItem value={ar.ratio} key={ar.ratio}>
-                            {ar.ratio} {ar.name}
-                          </SelectItem>
-                        ))}
+                        <SelectGroup>
+                          <SelectLabel>General</SelectLabel>
+                          {aspectRatiosOptions.map((ar) => (
+                            <SelectItem value={ar.key} key={ar.key}>
+                              {ar.ratio} {ar.name}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                        <SelectGroup>
+                          <SelectLabel>Social Media Covers</SelectLabel>
+                          {socialMediaPostDimensions.map((sm) => (
+                            <SelectItem value={sm.key} key={sm.key}>
+                              {sm.ratio} {sm.name}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
                       </SelectContent>
                     </Select>
                   )}

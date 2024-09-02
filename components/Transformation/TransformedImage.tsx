@@ -1,5 +1,4 @@
 "use client";
-import { getImageHeight, getImageWidth } from "@/lib/utils";
 import { Transformation } from "@prisma/client";
 import { CldImage } from "next-cloudinary";
 import { useState } from "react";
@@ -15,8 +14,8 @@ const TransformedImage = ({ data, aspectRatio }: TransformedImageProps) => {
 
   const imageProps = {
     src: data.transformationURL,
-    width: getImageWidth(aspectRatio),
-    height: getImageHeight(aspectRatio),
+    width: data.transformed_width as number,
+    height: data.transformed_height as number,
   };
 
   return (

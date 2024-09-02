@@ -1,4 +1,4 @@
-import { aspectRatiosOptions } from "@/constants";
+import { aspectRatiosOptions, socialMediaPostDimensions } from "@/constants";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -18,15 +18,6 @@ export const convertImageToBase64 = (image: File): Promise<string> =>
 
     reader.readAsDataURL(image);
   });
-
-export const getImageWidth = (aspectRatio: string) => {
-  return aspectRatiosOptions.find((ar) => ar.ratio === aspectRatio)?.dimensions
-    .width;
-};
-export const getImageHeight = (aspectRatio: string) => {
-  return aspectRatiosOptions.find((ar) => ar.ratio === aspectRatio)?.dimensions
-    .height;
-};
 
 const toBase64 = (str: string) =>
   typeof window === "undefined"
@@ -56,16 +47,18 @@ export const getImageDimensions = (
 ): Promise<{ height: number; width: number }> => {
   const img = document.createElement("img");
 
-  const promise = new Promise<{ height: number; width: number }>((resolve, reject) => {
-    img.onload = () => {
-      const width = img.naturalWidth;
-      const height = img.naturalHeight;
+  const promise = new Promise<{ height: number; width: number }>(
+    (resolve, reject) => {
+      img.onload = () => {
+        const width = img.naturalWidth;
+        const height = img.naturalHeight;
 
-      resolve({ height, width });
-    };
+        resolve({ height, width });
+      };
 
-    img.onerror = reject;
-  });
+      img.onerror = reject;
+    }
+  );
 
   img.src = URL.createObjectURL(file);
 

@@ -42,7 +42,9 @@ const MediaUploader = ({ imageProps }: MediaUploaderProps) => {
               {...getRootProps()}
               className={cn(
                 "h-[250px] w-full p-4 rounded-xl block transition-all border border-border shadow-lg bg-background/30",
-                !imageProps?.imageURL ? "hover:scale-105 cursor-pointer" : ""
+                !imageProps?.imageURL && !isPending
+                  ? "hover:scale-105 cursor-pointer"
+                  : ""
               )}
             >
               <div className="h-full w-full rounded-xl border-2 border-dashed border-secondary flex items-center justify-center">
@@ -72,7 +74,9 @@ const MediaUploader = ({ imageProps }: MediaUploaderProps) => {
                   </>
                 )}
               </div>
-              {!imageProps?.imageURL && <input {...getInputProps()} />}
+              {!imageProps?.imageURL && !isPending && (
+                <input {...getInputProps()} />
+              )}
             </div>
           </section>
         )}

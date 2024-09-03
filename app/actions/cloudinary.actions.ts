@@ -69,6 +69,8 @@ export const applyTransformation = createServerAction()
       src: z.string().min(1, { message: "src is required" }),
       aspectRatio: z.string().min(1, { message: "Aspect Ratio is required" }),
       aspect_ratio_key: z.string(),
+      height: z.number(),
+      width: z.number(),
     })
   )
   .handler(async ({ input }) => {
@@ -80,12 +82,14 @@ export const applyTransformation = createServerAction()
       throw new ZSAError("NOT_AUTHORIZED");
     }
 
-    const { id, aspectRatio, publicId, title, aspect_ratio_key } = input;
+    const { id, aspectRatio, publicId, title, aspect_ratio_key, width, height } = input;
 
     const transformationURL = getCldImageUrl({
       src: publicId,
       fillBackground: true,
       aspectRatio,
+      height,
+      width
     });
 
     const transformation = db.transformation.update({
@@ -98,6 +102,8 @@ export const applyTransformation = createServerAction()
         transformationURL,
         aspectRatio,
         aspect_ratio_key: aspect_ratio_key as string,
+        transformed_height: height,
+        transformed_width: width
       },
     });
 

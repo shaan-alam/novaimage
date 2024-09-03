@@ -32,6 +32,8 @@ model Transformation {
   transformationURL  String
   original_height    Int
   original_width     Int
+  transformed_height Int?
+  transformed_width  Int?
   publicId           String
   transformationType String
   aspectRatio        String?

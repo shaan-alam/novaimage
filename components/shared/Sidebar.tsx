@@ -23,7 +23,7 @@ const Sidebar = ({ user }: { user: User }) => {
 
   return (
     <SidebarUI open={open} setOpen={setOpen}>
-      <SidebarBody className="fixed top-0 left-1 z-30">
+      <SidebarBody className="relative">
         <div className="h-[95vh] flex flex-col">
           <div className="my-6 flex items-center space-x-2">
             <Image

@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -62,13 +60,17 @@
 }
 
 body {
-  @apply bg-background
+  @apply bg-background;
 }
 
-
-.grainy-background {
-  background-image: url("/images/grains.jpg");
+.app-layout {
+  background-image: url("/images/grid.svg");
   background-repeat: no-repeat;
-  background-size: 100% 100%;
+  background-size: cover;
 }
 
+.gradient-heading {
+  background: -webkit-linear-gradient(#eee, #333);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

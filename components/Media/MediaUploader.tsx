@@ -23,7 +23,7 @@ const MediaUploader = ({ imageProps }: MediaUploaderProps) => {
 
     const base64 = await convertImageToBase64(file);
     const transformation = await execute({ file: base64, height, width });
-
+    console.log(transformation);
     router.push(`/generative-fill/update/${transformation[0]?.id}`);
   };
 
@@ -37,11 +37,11 @@ const MediaUploader = ({ imageProps }: MediaUploaderProps) => {
         multiple={false}
       >
         {({ getRootProps, getInputProps }) => (
-          <section>
+          <section className="w-full">
             <div
               {...getRootProps()}
               className={cn(
-                "h-[250px] w-full p-4 rounded-xl block transition-all border border-border shadow-lg bg-background/30",
+                "h-[250px] w-full p-4 rounded-xl block transition-all border border-border shadow-lg bg-background/80",
                 !imageProps?.imageURL && !isPending
                   ? "hover:scale-105 cursor-pointer"
                   : ""

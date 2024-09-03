@@ -1,20 +1,14 @@
 import MediaUploader from "@/components/Media/MediaUploader";
-import { IconDropletHalf2 } from "@tabler/icons-react";
+import { IconSparkles } from "@tabler/icons-react";
 
 const GenerativeFill = () => {
   return (
-    <div className="container mx-auto bg-[#12181D] p-12 border border-secondary rounded-xl">
-      <h1 className="flex items-center text-white font-bold text-4xl">
-        <IconDropletHalf2 color="white" />
-        &nbsp; Generative Fill
+    <div className="container mx-auto flex flex-col items-center justify-center h-[80vh]">
+      <h1 className="text-7xl my-12 font-semibold gradient-heading flex items-center">
+        <IconSparkles size={72} className="text-gray-500" />
+        Generative Fill
       </h1>
-      <p className="mt-4 leadinng-7 w-1/2 text-neutral-400">
-        Transform your images with our AI-powered generative fill feature,
-        allowing you to seamlessly add or remove elements with ease. 🚀
-      </p>
-      <div className="my-6">
-        <MediaUploader />
-      </div>
+      <MediaUploader />
     </div>
   );
 };

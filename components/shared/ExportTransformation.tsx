@@ -47,7 +47,7 @@ interface ImageFormat {
 const ExportTransformation = ({
   transformation,
 }: {
-  transformation: Transformation;
+  transformation: Transformation | undefined | null;
 }) => {
   const [isPending, setIsPending] = useState(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -65,7 +65,7 @@ const ExportTransformation = ({
   };
 
   const handleExport = async () => {
-    if (selectedFormat) {
+    if (selectedFormat && transformation) {
       setIsPending(true);
 
       const { aspectRatio, publicId, transformationType } = transformation;

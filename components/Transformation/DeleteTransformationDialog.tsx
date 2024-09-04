@@ -40,7 +40,7 @@ const DeleteTransformationDialog = ({
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger>
+      <AlertDialogTrigger className="w-full">
         <Button
           type="button"
           variant="secondary"

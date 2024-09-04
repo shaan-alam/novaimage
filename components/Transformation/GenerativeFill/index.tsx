@@ -1,5 +1,5 @@
 "use client";
-import { applyTransformation } from "@/app/actions/cloudinary.actions";
+import { applyTransformationAction } from "@/app/actions/cloudinary.actions";
 import {
   Select,
   SelectContent,
@@ -16,6 +16,7 @@ import { Transformation } from "@prisma/client";
 import { IconPaintFilled, IconSparkles } from "@tabler/icons-react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { z } from "zod";
 import { useServerAction } from "zsa-react";
 import ExportTransformation from "../../shared/ExportTransformation";
@@ -45,7 +46,11 @@ const formSchema = z.object({
 });
 
 const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
-  const { isPending, execute, data } = useServerAction(applyTransformation);
+  const {
+    isPending,
+    execute: applyTransformation,
+    data,
+  } = useServerAction(applyTransformationAction);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -60,17 +65,23 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
     const { aspectRatio, title, aspect_ratio_key, width, height } = values;
 
     if (transformation) {
-      const result = await execute({
-        id: transformation?.id,
-        publicId: transformation?.publicId as string,
-        title,
-        src: transformation?.imageURL as string,
-        aspectRatio,
-        aspect_ratio_key,
-        height,
-        width,
-      });
-      console.log(result);
+      toast.promise(
+        applyTransformation({
+          id: transformation?.id,
+          publicId: transformation?.publicId as string,
+          title,
+          src: transformation?.imageURL as string,
+          aspectRatio,
+          aspect_ratio_key,
+          height,
+          width,
+        }),
+        {
+          loading: "Working on your transformation",
+          error: "Could not process your image!",
+          success: "Success! Loading your image...",
+        }
+      );
     }
   };
 
@@ -90,7 +101,7 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
 
   return (
     <div className="flex gap-x-2 h-[98vh]">
-      <div className="backdrop-blur-lg w-[20%] bg-[#161c20]/50 px-6 py-4 border border-secondary rounded-xl">
+      <div className="flex flex-col backdrop-blur-lg w-[20%] bg-[#161c20]/50 px-6 py-4 border border-secondary rounded-xl">
         <h1 className="flex items-center text-[#a9c7db] font-semibold text-xl mt-7">
           <IconSparkles />
           &nbsp; Generative Fill
@@ -161,24 +172,18 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
               >
                 Apply Transformation
               </Button>
-              <DeleteTransformationDialog
-                transformationId={transformation?.id as string}
-              />
             </div>
           </form>
         </Form>
-        {data && <ExportTransformation transformation={data} />}
+        <ExportTransformation transformation={data || transformation} />
+        <div className="mt-auto">
+          <DeleteTransformationDialog
+            transformationId={transformation?.id as string}
+          />
+        </div>
       </div>
       <div className="w-[80%] px-6 py-4 bg-[#0f1316]/70 backdrop-blur-lg border border-secondary rounded-xl flex flex-col items-center justify-center">
-        {!data && !isPending && (
-          <Image
-            alt="Original Image"
-            src={transformation?.imageURL as string}
-            height={transformation?.original_height}
-            width={transformation?.original_width}
-          />
-        )}
-        {data && transformation && <TransformedImage data={data} key={data.id} />}
+        {data && <TransformedImage transformation={data} />}
       </div>
     </div>
   );

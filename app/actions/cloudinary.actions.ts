@@ -60,7 +60,7 @@ export const uploadToCloudinary = createServerAction()
     });
   });
 
-export const applyTransformation = createServerAction()
+export const applyTransformationAction = createServerAction()
   .input(
     z.object({
       id: z.string(),
@@ -82,14 +82,22 @@ export const applyTransformation = createServerAction()
       throw new ZSAError("NOT_AUTHORIZED");
     }
 
-    const { id, aspectRatio, publicId, title, aspect_ratio_key, width, height } = input;
+    const {
+      id,
+      aspectRatio,
+      publicId,
+      title,
+      aspect_ratio_key,
+      width,
+      height,
+    } = input;
 
     const transformationURL = getCldImageUrl({
       src: publicId,
       fillBackground: true,
       aspectRatio,
       height,
-      width
+      width,
     });
 
     const transformation = db.transformation.update({
@@ -103,7 +111,7 @@ export const applyTransformation = createServerAction()
         aspectRatio,
         aspect_ratio_key: aspect_ratio_key as string,
         transformed_height: height,
-        transformed_width: width
+        transformed_width: width,
       },
     });
 
@@ -139,3 +147,5 @@ export const deleteTransformation = createServerAction()
 
     return { message: "Deleted your transformation successfully!" };
   });
+
+

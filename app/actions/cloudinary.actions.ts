@@ -63,6 +63,33 @@ export const uploadToCloudinary = createServerAction()
 export const applyTransformationAction = createServerAction()
   .input(
     z.object({
+      publicId: z.string().min(1, { message: "Public ID is required" }),
+      aspectRatio: z.string().min(1, { message: "Aspect Ratio is required" }),
+      height: z.number(),
+      width: z.number(),
+    })
+  )
+  .handler(async ({ input }) => {
+    const { aspectRatio, publicId, height, width } = input;
+    const transformationURL = await getCldImageUrl({
+      src: publicId,
+      fillBackground: true,
+      aspectRatio,
+      height,
+      width,
+    });
+
+    return {
+      transformationURL,
+      publicId,
+      height,
+      width,
+    };
+  });
+
+export const saveTransformationAction = createServerAction()
+  .input(
+    z.object({
       id: z.string(),
       title: z.string(),
       publicId: z.string().min(1, { message: "Public ID is required" }),
@@ -147,5 +174,3 @@ export const deleteTransformation = createServerAction()
 
     return { message: "Deleted your transformation successfully!" };
   });
-
-

@@ -1,5 +1,5 @@
 "use client";
-import { applyTransformationAction } from "@/app/actions/cloudinary.actions";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -13,7 +13,11 @@ import { aspectRatiosOptions, socialMediaPostDimensions } from "@/constants";
 import { AspectRatioKeyField } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Transformation } from "@prisma/client";
-import { IconPaintFilled, IconSparkles } from "@tabler/icons-react";
+import {
+  IconDeviceFloppy,
+  IconPaintFilled,
+  IconSparkles,
+} from "@tabler/icons-react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -32,6 +36,11 @@ import {
 import { Input } from "../../ui/input";
 import DeleteTransformationDialog from "../DeleteTransformationDialog";
 import TransformedImage from "../TransformedImage";
+import {
+  applyTransformationAction,
+  saveTransformationAction,
+} from "@/app/actions/cloudinary.actions";
+import { useState } from "react";
 
 type GenerativeFillFormProps = {
   transformation: Transformation | null;
@@ -46,11 +55,19 @@ const formSchema = z.object({
 });
 
 const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
+  const [transformationURL, setTransformationURL] = useState<
+    string | undefined
+  >("");
+
   const {
     isPending,
     execute: applyTransformation,
     data,
   } = useServerAction(applyTransformationAction);
+
+  const { isPending: isSaving, execute: saveTransformation } = useServerAction(
+    saveTransformationAction
+  );
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -61,25 +78,47 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onApplyTransformation = async () => {
+    const { aspectRatio, width, height } = form.getValues();
+
+    if (transformation) {
+      toast
+        .promise(
+          applyTransformation({
+            aspectRatio,
+            height,
+            width,
+            publicId: transformation.publicId,
+          }),
+          {
+            loading: "Working on your transformation",
+            error: "Could not process your image!",
+            success: "Success! Loading your image...",
+          }
+        )
+        .then((value) => setTransformationURL(value[0]?.transformationURL));
+    }
+  };
+
+  const onSaveTransformation = (values: z.infer<typeof formSchema>) => {
     const { aspectRatio, title, aspect_ratio_key, width, height } = values;
 
     if (transformation) {
       toast.promise(
-        applyTransformation({
-          id: transformation?.id,
-          publicId: transformation?.publicId as string,
-          title,
-          src: transformation?.imageURL as string,
+        saveTransformation({
           aspectRatio,
-          aspect_ratio_key,
           height,
           width,
+          publicId: transformation.publicId,
+          aspect_ratio_key,
+          id: transformation.id,
+          src: transformation.imageURL,
+          title,
         }),
         {
-          loading: "Working on your transformation",
-          error: "Could not process your image!",
-          success: "Success! Loading your image...",
+          loading: "Saving...",
+          error: "Could not save your image!",
+          success: "Your image has been successfully saved!",
         }
       );
     }
@@ -118,7 +157,7 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
           className="my-6 rounded-md"
         />
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={form.handleSubmit(onSaveTransformation)}>
             <FormField
               control={form.control}
               name="title"
@@ -166,16 +205,28 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
             />
             <div className="mt-6 flex items-center space-x-4">
               <Button
+                type="button"
                 isLoading={isPending}
+                className="w-full"
                 disabled={!form.getValues().aspectRatio}
                 icon={<IconPaintFilled size={15} />}
+                onClick={onApplyTransformation}
               >
-                Apply Transformation
+                Apply
+              </Button>
+              <Button
+                variant="secondary"
+                className="w-full"
+                isLoading={isSaving}
+                icon={<IconDeviceFloppy size={15} />}
+                disabled={!transformationURL}
+              >
+                Save
               </Button>
             </div>
           </form>
         </Form>
-        <ExportTransformation transformation={data || transformation} />
+        <ExportTransformation transformation={transformation} />
         <div className="mt-auto">
           <DeleteTransformationDialog
             transformationId={transformation?.id as string}
@@ -183,7 +234,9 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
         </div>
       </div>
       <div className="w-[80%] px-6 py-4 bg-[#0f1316]/70 backdrop-blur-lg border border-secondary rounded-xl flex flex-col items-center justify-center">
-        {data && <TransformedImage transformation={data} />}
+        <ScrollArea className="h-[90%]">
+          <TransformedImage transformation={data} />
+        </ScrollArea>
       </div>
     </div>
   );

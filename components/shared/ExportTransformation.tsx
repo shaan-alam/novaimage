@@ -10,6 +10,7 @@ import {
 import { getCldImageUrl } from "next-cloudinary";
 import { Transformation } from "@prisma/client";
 import { downloadImage } from "@/lib/utils";
+import toast from "react-hot-toast";
 
 interface ButtonRadioProps {
   id: string;
@@ -76,10 +77,17 @@ const ExportTransformation = ({
         format: selectedFormat,
         aspectRatio: aspectRatio as string,
       });
-      console.log(image);
 
-      await downloadImage(image);
-      setIsPending(false);
+      toast
+        .promise(downloadImage(image), {
+          loading: "Please hold on while we export your image",
+          error:
+            "Oh, looks like something went wrong while exporting your image!",
+          success: "Successfully exported your image!",
+        })
+        .then(() => {
+          setIsPending(false);
+        });
     }
   };
 

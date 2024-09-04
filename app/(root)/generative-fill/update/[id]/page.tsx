@@ -1,4 +1,4 @@
-import GenerativeFill from "@/components/Transformation/GenerativeFill";
+import GenerativeFillForm from "@/components/Transformation/GenerativeFill";
 import { db } from "@/db";
 import { redirect } from "next/navigation";
 
@@ -15,7 +15,7 @@ const TransformationPage = async ({ params }: { params: { id: string } }) => {
 
   return (
     <>
-      <GenerativeFill transformation={transformation} />
+      <GenerativeFillForm transformation={transformation} />
     </>
   );
 };

@@ -1,19 +1,26 @@
 "use client";
 import { cn } from "@/lib/utils";
 import Link, { LinkProps } from "next/link";
-import React, { useState, createContext, useContext } from "react";
+import React, {
+  useState,
+  createContext,
+  useContext,
+  RefAttributes,
+} from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { IconMenu2, IconX } from "@tabler/icons-react";
+import { Icon, IconMenu2, IconProps, IconX } from "@tabler/icons-react";
 
 interface Links {
   label: string;
   href: string;
-  icon: React.JSX.Element | React.ReactNode;
+  icon: React.ForwardRefExoticComponent<IconProps & RefAttributes<Icon>>;
 }
 
 interface SidebarContextProps {
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  open: boolean | undefined;
+  setOpen:
+    | React.Dispatch<React.SetStateAction<boolean>>
+    | React.Dispatch<React.SetStateAction<boolean | undefined>>;
   animate: boolean;
 }
 
@@ -40,9 +47,9 @@ export const SidebarProvider = ({
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   animate?: boolean;
 }) => {
-  const [openState, setOpenState] = useState(true);
+  const [openState, setOpenState] = useState(openProp);
 
-  const open = true;
+  const open = openProp !== undefined ? openProp : openState;
   const setOpen = setOpenProp !== undefined ? setOpenProp : setOpenState;
 
   return (
@@ -86,10 +93,10 @@ export const DesktopSidebar = ({
 }: React.ComponentProps<typeof motion.div>) => {
   const { open, setOpen, animate } = useSidebar();
   return (
-    <div className="p-2">
+    <div className="mr-2 ml-1 relative">
       <motion.div
         className={cn(
-          "h-full px-4 py-4 hidden rounded-xl  md:flex md:flex-col  bg-neutral-800 w-[300px] flex-shrink-0",
+          "h-full px-4 py-4 hidden rounded-xl  md:flex md:flex-col bg-[#3b3b3b33] border-accent  backdrop-blur-md bg-opacity-80 w-[300px] flex-shrink-0",
           className
         )}
         animate={{
@@ -115,13 +122,13 @@ export const MobileSidebar = ({
     <>
       <div
         className={cn(
-          "h-10 px-4 py-4 flex flex-row md:hidden  items-center justify-between bg-neutral-100 dark:bg-neutral-800 w-full"
+          "h-10 px-4 py-4 flex flex-row md:hidden  items-center justify-between bg-neutral-100 dark:bg-neutral-800 fixed top-0 w-full z-30"
         )}
         {...props}
       >
         <div className="flex justify-end z-20 w-full">
           <IconMenu2
-            className="text-neutral-800 dark:text-neutral-200"
+            className="text-neutral-800 dark:text-neutral-200 cursor-pointer"
             onClick={() => setOpen(!open)}
           />
         </div>
@@ -171,20 +178,23 @@ export const SidebarLink = ({
     <Link
       href={link.href}
       className={cn(
-        "flex items-center justify-start gap-2  group/sidebar py-2 px-2",
-        isActive ? "bg-neutral-700 rounded-xl" : "",
+        "flex items-center justify-start gap-2  group/sidebar",
+        open && "p-2",
+        isActive ? "bg-primary rounded-xl text-white" : "text-neutral-400",
         className
       )}
       {...props}
     >
-      {link.icon}
+      <link.icon
+        className={cn("h-[30px] w-[30px] rounded-full p-1", isActive ? "text-white": "text-neutral-400")}
+      />
 
       <motion.span
         animate={{
           display: animate ? (open ? "inline-block" : "none") : "inline-block",
           opacity: animate ? (open ? 1 : 0) : 1,
         }}
-        className="text-neutral-700 dark:text-neutral-200 text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0"
+        className="text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0"
       >
         {link.label}
       </motion.span>

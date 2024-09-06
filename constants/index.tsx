@@ -2,8 +2,9 @@ import {
   IconBackground,
   IconColorFilter,
   IconLayoutDashboard,
-  IconSparkles
+  IconSparkles,
 } from "@tabler/icons-react";
+import Image from "next/image";
 
 export const SIDEBAR_LINKS = [
   {
@@ -151,5 +152,157 @@ export const socialMediaPostDimensions = [
     name: "TikTok Video",
     ratio: "9:16",
     dimensions: { width: 1080, height: 1920 },
+  },
+];
+
+type Feature = {
+  title: string;
+  description: string;
+  content?: React.ReactNode | any;
+};
+
+type Testimonial = {
+  quote: string;
+  name: string;
+  title: string;
+};
+
+export const testimonials: Testimonial[] = [
+  {
+    quote:
+      "Nova Image has completely transformed the way I edit and enhance my photos. The AI tools are both powerful and easy to use!",
+    name: "Emily Jones",
+    title: "Professional Photographer",
+  },
+  {
+    quote:
+      "With Nova Image, I can create flawless visuals for my online store in just minutes. It's a game-changer for my business!",
+    name: "Mark Stevens",
+    title: "E-commerce Entrepreneur",
+  },
+  {
+    quote:
+      "I love how effortless image editing has become with Nova Image. The background removal tool is especially incredible!",
+    name: "Sophia Martinez",
+    title: "Graphic Designer",
+  },
+  {
+    quote:
+      "The AI features in Nova Image are top-notch. It's like having a personal designer working on every photo!",
+    name: "James Reed",
+    title: "Content Creator",
+  },
+  {
+    quote:
+      "Nova Image's object removal feature is unbelievable. I can clean up any photo and make it look perfect!",
+    name: "Alicia Green",
+    title: "Social Media Influencer",
+  },
+  {
+    quote:
+      "I've been able to speed up my workflow thanks to Nova Image. The tools are fast, intuitive, and produce high-quality results!",
+    name: "Michael Nguyen",
+    title: "Digital Artist",
+  },
+  {
+    quote:
+      "As a web designer, Nova Image has helped me generate creative assets that stand out. It's become an essential tool for my projects.",
+    name: "Olivia Carter",
+    title: "Web Designer",
+  },
+  {
+    quote:
+      "Nova Image has changed the way I think about photo editing. The AI-powered recolor tool is my favorite!",
+    name: "David Patel",
+    title: "Marketing Manager",
+  },
+  {
+    quote:
+      "The ease of use and efficiency of Nova Image make it a must-have for anyone working with visuals. It saves me so much time!",
+    name: "Rachel Simmons",
+    title: "Freelance Designer",
+  },
+  {
+    quote:
+      "From background removal to object generation, Nova Image has everything I need to make my images look professional in minutes.",
+    name: "Liam Turner",
+    title: "Creative Director",
+  },
+];
+
+export const features: Feature[] = [
+  {
+    title: "AI Generative Fill",
+    description:
+      "Automatically fill in missing parts of your images with realistic and creative results. Say goodbye to incomplete photos!",
+    content: (
+      <Image
+        src="/images/demo.png"
+        width={1920}
+        height={640}
+        alt="Demo"
+        className="shadow-background shadow-2xl rounded-2xl"
+      />
+    ),
+  },
+  {
+    title: "AI Recolor (Coming soon)",
+    description:
+      "Recolor your images with a single click. Change colors to match your brand or create entirely new moods.",
+    content: (
+      <Image
+        src="/images/demo.png"
+        width={1920}
+        height={640}
+        alt="Demo"
+        className="shadow-background shadow-2xl rounded-2xl"
+      />
+    ),
+  },
+  {
+    title: "AI Object Removal (Coming soon)",
+    description:
+      "Remove unwanted objects from your photos seamlessly. No more photobombs or distracting elements!",
+    content: (
+      <Image
+        src="/images/demo.png"
+        width={1920}
+        height={640}
+        alt="Demo"
+        className="shadow-background shadow-2xl rounded-2xl"
+      />
+    ),
+  },
+  {
+    title: "AI Image Generation (Coming soon)",
+    description:
+      "Generate stunning images from scratch with the power of AI. Perfect for when you need a unique visual in seconds.",
+    content: (
+      <Image
+        src="/images/demo.png"
+        width={1920}
+        height={640}
+        alt="Demo"
+        className="shadow-background shadow-2xl rounded-2xl"
+      />
+    ),
+  },
+  {
+    title: "AI Background Removal (Coming soon)",
+    description:
+      "Instantly remove backgrounds to isolate your subject. Ideal for creating professional product images or unique portraits.",
+    content: (
+      <Image
+        src="/images/demo.png"
+        width={1920}
+        height={640}
+        alt="Demo"
+        className="shadow-background shadow-2xl rounded-2xl"
+      />
+    ),
+  },
+  {
+    title: "",
+    description: "",
   },
 ];

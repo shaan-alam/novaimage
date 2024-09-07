@@ -1,4 +1,8 @@
 "use client";
+import {
+  applyTransformationAction,
+  saveTransformationAction,
+} from "@/app/actions/cloudinary.actions";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
@@ -19,6 +23,7 @@ import {
   IconSparkles,
 } from "@tabler/icons-react";
 import Image from "next/image";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
@@ -36,11 +41,6 @@ import {
 import { Input } from "../../ui/input";
 import DeleteTransformationDialog from "../DeleteTransformationDialog";
 import TransformedImage from "../TransformedImage";
-import {
-  applyTransformationAction,
-  saveTransformationAction,
-} from "@/app/actions/cloudinary.actions";
-import { useState } from "react";
 
 type GenerativeFillFormProps = {
   transformation: Transformation | null;
@@ -58,6 +58,14 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
   const [transformationURL, setTransformationURL] = useState<
     string | undefined
   >("");
+
+  const [config, setConfig] = useState({
+    aspectRatio: "",
+    title: "",
+    height: 0,
+    width: 0,
+    fillBackground: false,
+  });
 
   const {
     isPending,
@@ -79,15 +87,27 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
   });
 
   const onApplyTransformation = async () => {
-    const { aspectRatio, width, height } = form.getValues();
+    const { title, aspectRatio, width, height } = form.getValues();
+
+    const config = {
+      title,
+      aspectRatio,
+      height,
+      width,
+      fillBackground: true,
+    };
+
+    setConfig(config);
 
     if (transformation) {
       toast
         .promise(
           applyTransformation({
-            aspectRatio,
-            height,
-            width,
+            config: {
+              aspectRatio,
+              height,
+              width,
+            },
             publicId: transformation.publicId,
           }),
           {
@@ -226,7 +246,11 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
             </div>
           </form>
         </Form>
-        <ExportTransformation transformation={transformation} />
+        {transformation && (
+          <ExportTransformation
+            transformation={{ ...transformation, ...config }}
+          />
+        )}
         <div className="mt-auto">
           <DeleteTransformationDialog
             transformationId={transformation?.id as string}
@@ -235,7 +259,7 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
       </div>
       <div className="w-[80%] px-6 py-4 bg-[#0f1316]/70 backdrop-blur-lg border border-secondary rounded-xl flex flex-col items-center justify-center">
         <ScrollArea className="h-[90%]">
-          <TransformedImage transformation={data} />
+          <TransformedImage transformation={data} config={config} />
         </ScrollArea>
       </div>
     </div>

@@ -48,7 +48,7 @@ interface ImageFormat {
 const ExportTransformation = ({
   transformation,
 }: {
-  transformation: Transformation | undefined | null;
+  transformation: Transformation | null;
 }) => {
   const [isPending, setIsPending] = useState(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -71,6 +71,8 @@ const ExportTransformation = ({
 
       const { aspectRatio, publicId, transformationType, prompt } =
         transformation;
+
+      console.log("transformation", transformation);
 
       const image = getCldImageUrl({
         fillBackground: transformationType === "GENERATIVE_FILL",

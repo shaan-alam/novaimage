@@ -24,8 +24,6 @@ const TransformedImage = ({
       {transformation && (
         <CldImage
           src={transformation?.publicId}
-          height={transformation?.height}
-          width={transformation?.width}
           alt="Transformed Image"
           placeholder={dataUrl as PlaceholderValue}
           {...config}

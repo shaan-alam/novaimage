@@ -26,8 +26,14 @@ const Home = () => {
           <h1 className="text-gray-200 font-bold text-2xl sm:text-4xl text-center">
             Transform Your Images with
           </h1>
-          <h1 className="text-5xl md:text-6xl lg:text-9xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-[#E91E63] to-orange-400 p-4">
-            Nova Image
+          <h1 className="flex items-center text-5xl md:text-6xl lg:text-9xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#E91E63] to-purple-400  p-4">
+            <Image
+              src="/images/logo.png"
+              height={150}
+              width={150}
+              alt="Nova Image"
+            />
+            <span>Nova Image</span>
           </h1>
           <h4 className="text-muted-foreground text-center text-lg sm:text-xl my-4 w-full sm:w-3/4 lg:w-1/2 mx-auto">
             With Nova Image, unleash the power of AI to create, edit, and

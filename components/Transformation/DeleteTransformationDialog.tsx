@@ -29,7 +29,7 @@ const DeleteTransformationDialog = ({
     toast.promise(execute({ id: transformationId }), {
       loading: "Deleting...",
       success: (result) => {
-        router.push("/generative-fill");
+        router.push("/dashboard");
         return <>{result[0]?.message}</>;
       },
       error: (err) => {

@@ -19,10 +19,11 @@ export const uploadToCloudinary = createServerAction()
       file: z.string().min(1, { message: "Image is required!" }),
       height: z.number({ message: "Height is required!" }),
       width: z.number({ message: "Width is required!" }),
+      type: z.enum(["GENERATIVE_FILL", "OBJECT_REMOVAL"]),
     })
   )
   .handler(async ({ input }) => {
-    const { file, height, width } = input;
+    const { file, height, width, type } = input;
     const { userId } = auth();
 
     const user = await getUserByClerkId(userId as string);
@@ -51,7 +52,7 @@ export const uploadToCloudinary = createServerAction()
         prompt: "",
         publicId: image.public_id,
         title: "",
-        transformationType: "gen-fill",
+        transformationType: type,
         transformationURL: "",
         userId: user.id,
         thumbnail,
@@ -64,26 +65,30 @@ export const applyTransformationAction = createServerAction()
   .input(
     z.object({
       publicId: z.string().min(1, { message: "Public ID is required" }),
-      aspectRatio: z.string().min(1, { message: "Aspect Ratio is required" }),
-      height: z.number(),
-      width: z.number(),
+      config: z.object({
+        aspectRatio: z
+          .string()
+          .min(1, { message: "Aspect Ratio is required" })
+          .optional(),
+        height: z.number(),
+        width: z.number(),
+        remove: z.string().optional(),
+      }),
     })
   )
   .handler(async ({ input }) => {
-    const { aspectRatio, publicId, height, width } = input;
+    const { config, publicId } = input;
+
     const transformationURL = await getCldImageUrl({
       src: publicId,
-      fillBackground: true,
-      aspectRatio,
-      height,
-      width,
+      ...config,
     });
 
     return {
       transformationURL,
       publicId,
-      height,
-      width,
+      height: config.height,
+      width: config.width,
     };
   });
 
@@ -133,7 +138,7 @@ export const saveTransformationAction = createServerAction()
       },
       data: {
         title,
-        transformationType: "genrative-fill",
+        transformationType: "GENERATIVE_FILL",
         transformationURL,
         aspectRatio,
         aspect_ratio_key: aspect_ratio_key as string,

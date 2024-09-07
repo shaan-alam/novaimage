@@ -26,6 +26,11 @@ model User {
   transformations Transformation[]
 }
 
+enum TransformationType{ 
+  GENERATIVE_FILL
+  OBJECT_REMOVAL
+}
+
 model Transformation {
   id                 String  @id @default(cuid())
   imageURL           String
@@ -35,7 +40,7 @@ model Transformation {
   transformed_height Int?
   transformed_width  Int?
   publicId           String
-  transformationType String
+  transformationType TransformationType?
   aspectRatio        String?
   title              String
   prompt             String?

@@ -96,13 +96,22 @@ export const saveTransformationAction = createServerAction()
   .input(
     z.object({
       id: z.string(),
-      title: z.string(),
       publicId: z.string().min(1, { message: "Public ID is required" }),
-      src: z.string().min(1, { message: "src is required" }),
-      aspectRatio: z.string().min(1, { message: "Aspect Ratio is required" }),
-      aspect_ratio_key: z.string(),
-      height: z.number(),
-      width: z.number(),
+      config: z.object({
+        title: z.string(),
+        fillBackground: z.boolean().optional(),
+        remove: z.string().optional(),
+        transformationType: z.enum(["GENERATIVE_FILL", "OBJECT_REMOVAL"], {
+          message: "Transformation Type is required!",
+        }),
+        aspectRatio: z
+          .string()
+          .min(1, { message: "Aspect Ratio is required" })
+          .optional(),
+        aspect_ratio_key: z.string().optional(),
+        height: z.number(),
+        width: z.number(),
+      }),
     })
   )
   .handler(async ({ input }) => {
@@ -114,15 +123,16 @@ export const saveTransformationAction = createServerAction()
       throw new ZSAError("NOT_AUTHORIZED");
     }
 
+    const { id, publicId, config } = input;
+
     const {
-      id,
-      aspectRatio,
-      publicId,
       title,
+      aspectRatio,
       aspect_ratio_key,
-      width,
       height,
-    } = input;
+      width,
+      transformationType,
+    } = config;
 
     const transformationURL = getCldImageUrl({
       src: publicId,
@@ -138,7 +148,7 @@ export const saveTransformationAction = createServerAction()
       },
       data: {
         title,
-        transformationType: "GENERATIVE_FILL",
+        transformationType,
         transformationURL,
         aspectRatio,
         aspect_ratio_key: aspect_ratio_key as string,

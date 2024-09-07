@@ -23,8 +23,8 @@ export const SIDEBAR_LINKS = [
     icon: IconColorFilter,
   },
   {
-    label: "Background Removal",
-    href: "/background-remove",
+    label: "Object Removal",
+    href: "/object-removal",
     icon: IconBackground,
   },
 ];

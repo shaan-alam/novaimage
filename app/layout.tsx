@@ -54,8 +54,9 @@ export default function RootLayout({
                   className: "text-base p-4",
                 },
                 style: {
-                  background: "#182027",
-                  color: "#fff",
+                  background: "#333",
+                  color: "#e1e1e1",
+                  border: '1px solid #333'
                 },
               }}
             />

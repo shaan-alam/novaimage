@@ -26,8 +26,13 @@ model User {
   transformations Transformation[]
 }
 
+enum TransformationType {
+  GENERATIVE_FILL
+  OBJECT_REMOVAL
+}
+
 model Transformation {
-  id                 String  @id @default(cuid())
+  id                 String              @id @default(cuid())
   imageURL           String
   transformationURL  String
   original_height    Int
@@ -35,12 +40,13 @@ model Transformation {
   transformed_height Int?
   transformed_width  Int?
   publicId           String
-  transformationType String
+  transformationType TransformationType?
+  fillBackground     Boolean?            @default(false)
   aspectRatio        String?
   title              String
   prompt             String?
   thumbnail          String
-  user               User    @relation(fields: [userId], references: [id])
+  user               User                @relation(fields: [userId], references: [id])
   userId             String
   aspect_ratio_key   String
 }

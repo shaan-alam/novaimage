@@ -27,7 +27,7 @@ const Sidebar = ({ user }: { user: User }) => {
         <div className="h-[95vh] flex flex-col">
           <div className="my-6 flex items-center space-x-2">
             <Image
-              src="/images/artsy_logo.png"
+              src="/images/logo.png"
               alt="Artsy logo"
               height={100}
               width={100}
@@ -42,7 +42,7 @@ const Sidebar = ({ user }: { user: User }) => {
                 open ? "opacity-100" : "opacity-0"
               )}
             >
-              Artsy
+              Nova Image
             </h1>
           </div>
           <div>

@@ -1,7 +1,8 @@
 "use client";
 import { uploadToCloudinary } from "@/app/actions/cloudinary.actions";
 import { cn, convertImageToBase64, getImageDimensions } from "@/lib/utils";
-import { Transformation } from "@prisma/client";
+import { REDIRECTION } from "@/types";
+import { Transformation, TransformationType } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Dropzone from "react-dropzone";
@@ -9,9 +10,15 @@ import { useServerAction } from "zsa-react";
 
 type MediaUploaderProps = {
   imageProps?: Transformation | null;
+  redirectTo: REDIRECTION;
+  transformationType: TransformationType;
 };
 
-const MediaUploader = ({ imageProps }: MediaUploaderProps) => {
+const MediaUploader = ({
+  imageProps,
+  redirectTo,
+  transformationType,
+}: MediaUploaderProps) => {
   const router = useRouter();
 
   const { isPending, execute } = useServerAction(uploadToCloudinary);
@@ -22,9 +29,14 @@ const MediaUploader = ({ imageProps }: MediaUploaderProps) => {
     const { height, width } = await getImageDimensions(file);
 
     const base64 = await convertImageToBase64(file);
-    const transformation = await execute({ file: base64, height, width });
-    console.log(transformation);
-    router.push(`/generative-fill/update/${transformation[0]?.id}`);
+    const transformation = await execute({
+      file: base64,
+      height,
+      width,
+      type: transformationType,
+    });
+
+    router.push(`/${redirectTo}/update/${transformation[0]?.id}`);
   };
 
   return (

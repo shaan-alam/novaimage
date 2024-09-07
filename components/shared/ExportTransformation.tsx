@@ -48,7 +48,7 @@ interface ImageFormat {
 const ExportTransformation = ({
   transformation,
 }: {
-  transformation: Transformation | undefined | null;
+  transformation: Transformation | null;
 }) => {
   const [isPending, setIsPending] = useState(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -69,13 +69,19 @@ const ExportTransformation = ({
     if (selectedFormat && transformation) {
       setIsPending(true);
 
-      const { aspectRatio, publicId, transformationType } = transformation;
+      const { aspectRatio, publicId, transformationType, prompt } =
+        transformation;
+
+      console.log("transformation", transformation);
 
       const image = getCldImageUrl({
-        fillBackground: transformationType === "genrative-fill",
+        fillBackground: transformationType === "GENERATIVE_FILL",
         src: publicId,
         format: selectedFormat,
         aspectRatio: aspectRatio as string,
+        remove: (transformationType === "OBJECT_REMOVAL"
+          ? prompt
+          : "") as string,
       });
 
       toast

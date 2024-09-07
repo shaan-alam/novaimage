@@ -1,4 +1,5 @@
 import MediaUploader from "@/components/Media/MediaUploader";
+import { REDIRECTION } from "@/types";
 import { IconSparkles } from "@tabler/icons-react";
 
 const GenerativeFill = () => {
@@ -8,7 +9,10 @@ const GenerativeFill = () => {
         <IconSparkles size={72} className="text-gray-500" />
         Generative Fill
       </h1>
-      <MediaUploader />
+      <MediaUploader
+        redirectTo={REDIRECTION.GENERATIVE_FILL}
+        transformationType="GENERATIVE_FILL"
+      />
     </div>
   );
 };

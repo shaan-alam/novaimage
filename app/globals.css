@@ -64,7 +64,7 @@ body {
 }
 
 .app-layout {
-  background-image: url("/images/grid.svg");
+  background: #121212;
   background-repeat: no-repeat;
   background-size: cover;
 }

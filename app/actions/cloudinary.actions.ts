@@ -132,6 +132,7 @@ export const saveTransformationAction = createServerAction()
       height,
       width,
       transformationType,
+      remove
     } = config;
 
     const transformationURL = getCldImageUrl({
@@ -154,6 +155,7 @@ export const saveTransformationAction = createServerAction()
         aspect_ratio_key: aspect_ratio_key as string,
         transformed_height: height,
         transformed_width: width,
+        prompt: remove
       },
     });
 

@@ -20,4 +20,7 @@ export type TransformationConfig = {
   fillBackground?: boolean;
   aspectRatio?: string;
   remove?: string;
+  title?: string;
+  height: number;
+  width: number;
 };

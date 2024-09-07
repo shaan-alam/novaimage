@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { aspectRatiosOptions, socialMediaPostDimensions } from "@/constants";
-import { AspectRatioKeyField } from "@/types";
+import { AspectRatioKeyField, TransformationConfig } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Transformation } from "@prisma/client";
 import {
@@ -60,7 +60,7 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
     string | undefined
   >("");
 
-  const [config, setConfig] = useState({
+  const [config, setConfig] = useState<TransformationConfig>({
     aspectRatio: "",
     title: "",
     height: 0,

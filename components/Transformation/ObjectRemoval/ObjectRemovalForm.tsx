@@ -23,6 +23,8 @@ import { useServerAction } from "zsa-react";
 import ExportTransformation from "../../shared/ExportTransformation";
 import DeleteTransformationDialog from "../DeleteTransformationDialog";
 import TransformedImage from "../TransformedImage";
+import { useSaveTransformation } from "@/hooks/save-transformation";
+import { Input } from "@/components/ui/input";
 
 type ObjectRemovalProps = {
   transformation: Transformation;
@@ -30,26 +32,37 @@ type ObjectRemovalProps = {
 
 const formSchema = z.object({
   prompt: z.string(),
+  title: z.string(),
 });
 
 const ObjectRemovalForm = ({ transformation }: ObjectRemovalProps) => {
+  const [transformationURL, setTransformationURL] = useState("");
+
   const {
     isPending,
     data,
     execute: applyTransformation,
   } = useServerAction(applyTransformationAction);
 
-  const [config, setConfig] = useState<TransformationConfig>();
+  const { isPending: isSaving, saveTransformation } =
+    useSaveTransformation(transformation);
+
+  const [config, setConfig] = useState<TransformationConfig>({
+    height: 0,
+    width: 0,
+    remove: "",
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      prompt: "",
+      prompt: transformation.prompt || "",
+      title: transformation.title || "",
     },
   });
 
-  const onApplyTransformation = async (values: z.infer<typeof formSchema>) => {
-    const { prompt } = values;
+  const onApplyTransformation = async () => {
+    const { prompt } = form.getValues();
 
     const config = {
       remove: prompt,
@@ -59,14 +72,31 @@ const ObjectRemovalForm = ({ transformation }: ObjectRemovalProps) => {
 
     setConfig(config);
 
-    toast.promise(
-      applyTransformation({ config, publicId: transformation.publicId }),
-      {
-        loading: "Hang on! We're removing the object from your image",
-        error: "Sorry! We could not perform the request at the moment!",
-        success: "Success! Loading your image..",
-      }
-    );
+    toast
+      .promise(
+        applyTransformation({ config, publicId: transformation.publicId }),
+        {
+          loading: "Hang on! We're removing the object from your image",
+          error: "Sorry! We could not perform the request at the moment!",
+          success: "Success! Loading your image..",
+        }
+      )
+      .then((value) =>
+        setTransformationURL(value[0]?.transformationURL as string)
+      );
+  };
+
+  const onSaveTransformation = (values: z.infer<typeof formSchema>) => {
+    const { width, height } = config;
+    const { prompt, title } = values;
+
+    saveTransformation({
+      height,
+      width,
+      title: title || "",
+      transformationType: "OBJECT_REMOVAL",
+      remove: prompt,
+    });
   };
 
   return (
@@ -90,7 +120,19 @@ const ObjectRemovalForm = ({ transformation }: ObjectRemovalProps) => {
           />
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onApplyTransformation)}>
+            <form onSubmit={form.handleSubmit(onSaveTransformation)}>
+              <FormField
+                name="title"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem className="mb-2">
+                    <FormLabel>Title</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Title" {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
               <FormField
                 name="prompt"
                 control={form.control}
@@ -106,14 +148,26 @@ const ObjectRemovalForm = ({ transformation }: ObjectRemovalProps) => {
                   </FormItem>
                 )}
               />
-              <Button
-                type="submit"
-                className="mt-2 w-full"
-                isLoading={isPending}
-                disabled={!form.getValues().prompt}
-              >
-                Remove
-              </Button>
+              <div className="flex space-x-2">
+                <Button
+                  type="button"
+                  className="mt-2 w-full"
+                  isLoading={isPending}
+                  onClick={onApplyTransformation}
+                  disabled={!form.getValues().prompt}
+                >
+                  Remove Object
+                </Button>
+                <Button
+                  variant="secondary"
+                  type="submit"
+                  className="mt-2 w-full"
+                  isLoading={isPending}
+                  disabled={!transformationURL}
+                >
+                  Save
+                </Button>
+              </div>
             </form>
           </Form>
 

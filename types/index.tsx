@@ -1,4 +1,6 @@
+import { TRANSFORMATION_TYPE } from "@prisma/client";
 import { ControllerRenderProps } from "react-hook-form";
+import { z } from "zod";
 
 export type AspectRatioKeyField = ControllerRenderProps<
   {
@@ -14,7 +16,14 @@ export type AspectRatioKeyField = ControllerRenderProps<
 export enum REDIRECTION {
   GENERATIVE_FILL = "generative-fill",
   OBJECT_REMOVAL = "object-removal",
+  GENERATIVE_RECOLOR = "generative-recolor",
 }
+
+export const zodTransformationTypeSchema = z.enum([
+  TRANSFORMATION_TYPE.GENERATIVE_FILL,
+  TRANSFORMATION_TYPE.GENERATIVE_RECOLOR,
+  TRANSFORMATION_TYPE.OBJECT_REMOVAL,
+]);
 
 export type TransformationConfig = {
   fillBackground?: boolean;

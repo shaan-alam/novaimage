@@ -1,5 +1,6 @@
 import GenerativeFillForm from "@/components/Transformation/GenerativeFill";
 import { db } from "@/db";
+import { REDIRECTION } from "@/types";
 import { redirect } from "next/navigation";
 
 const TransformationPage = async ({ params }: { params: { id: string } }) => {
@@ -11,7 +12,7 @@ const TransformationPage = async ({ params }: { params: { id: string } }) => {
     },
   });
 
-  if (!transformation) redirect("/generative-fill");
+  if (!transformation) redirect(`/${REDIRECTION.GENERATIVE_FILL}`);
 
   return (
     <>

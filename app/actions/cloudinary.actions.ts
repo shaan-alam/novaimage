@@ -1,5 +1,6 @@
 "use server";
 import { db } from "@/db";
+import { zodTransformationTypeSchema } from "@/types";
 import { auth } from "@clerk/nextjs/server";
 import { v2 as cloudinary } from "cloudinary";
 import { getCldImageUrl } from "next-cloudinary";
@@ -19,7 +20,7 @@ export const uploadToCloudinary = createServerAction()
       file: z.string().min(1, { message: "Image is required!" }),
       height: z.number({ message: "Height is required!" }),
       width: z.number({ message: "Width is required!" }),
-      type: z.enum(["GENERATIVE_FILL", "OBJECT_REMOVAL"]),
+      type: zodTransformationTypeSchema,
     })
   )
   .handler(async ({ input }) => {
@@ -101,9 +102,7 @@ export const saveTransformationAction = createServerAction()
         title: z.string(),
         fillBackground: z.boolean().optional(),
         remove: z.string().optional(),
-        transformationType: z.enum(["GENERATIVE_FILL", "OBJECT_REMOVAL"], {
-          message: "Transformation Type is required!",
-        }),
+        transformationType: zodTransformationTypeSchema,
         aspectRatio: z
           .string()
           .min(1, { message: "Aspect Ratio is required" })
@@ -132,7 +131,7 @@ export const saveTransformationAction = createServerAction()
       height,
       width,
       transformationType,
-      remove
+      remove,
     } = config;
 
     const transformationURL = getCldImageUrl({
@@ -155,7 +154,7 @@ export const saveTransformationAction = createServerAction()
         aspect_ratio_key: aspect_ratio_key as string,
         transformed_height: height,
         transformed_width: width,
-        prompt: remove
+        prompt: remove,
       },
     });
 

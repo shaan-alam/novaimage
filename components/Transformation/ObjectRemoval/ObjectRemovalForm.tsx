@@ -8,11 +8,13 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
+import { useSaveTransformation } from "@/hooks/save-transformation";
 import { TransformationConfig } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Transformation } from "@prisma/client";
+import { Transformation, TRANSFORMATION_TYPE } from "@prisma/client";
 import { IconSparkles } from "@tabler/icons-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -23,8 +25,6 @@ import { useServerAction } from "zsa-react";
 import ExportTransformation from "../../shared/ExportTransformation";
 import DeleteTransformationDialog from "../DeleteTransformationDialog";
 import TransformedImage from "../TransformedImage";
-import { useSaveTransformation } from "@/hooks/save-transformation";
-import { Input } from "@/components/ui/input";
 
 type ObjectRemovalProps = {
   transformation: Transformation;
@@ -94,7 +94,7 @@ const ObjectRemovalForm = ({ transformation }: ObjectRemovalProps) => {
       height,
       width,
       title: title || "",
-      transformationType: "OBJECT_REMOVAL",
+      transformationType: TRANSFORMATION_TYPE.OBJECT_REMOVAL,
       remove: prompt,
     });
   };

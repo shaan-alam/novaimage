@@ -6,6 +6,7 @@ import {
 } from "@tabler/icons-react";
 import Image from "next/image";
 
+
 export const SIDEBAR_LINKS = [
   {
     label: "Dashboard",
@@ -19,7 +20,7 @@ export const SIDEBAR_LINKS = [
   },
   {
     label: "Recolor",
-    href: "/recolor",
+    href: "/generative-recolor",
     icon: IconColorFilter,
   },
   {

@@ -2,7 +2,7 @@
 import { uploadToCloudinary } from "@/app/actions/cloudinary.actions";
 import { cn, convertImageToBase64, getImageDimensions } from "@/lib/utils";
 import { REDIRECTION } from "@/types";
-import { Transformation, TransformationType } from "@prisma/client";
+import { Transformation, TRANSFORMATION_TYPE } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Dropzone from "react-dropzone";
@@ -11,7 +11,7 @@ import { useServerAction } from "zsa-react";
 type MediaUploaderProps = {
   imageProps?: Transformation | null;
   redirectTo: REDIRECTION;
-  transformationType: TransformationType;
+  transformationType: TRANSFORMATION_TYPE;
 };
 
 const MediaUploader = ({

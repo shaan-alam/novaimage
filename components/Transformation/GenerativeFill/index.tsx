@@ -1,8 +1,5 @@
 "use client";
-import {
-  applyTransformationAction,
-  saveTransformationAction,
-} from "@/app/actions/cloudinary.actions";
+import { applyTransformationAction } from "@/app/actions/cloudinary.actions";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
@@ -14,9 +11,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { aspectRatiosOptions, socialMediaPostDimensions } from "@/constants";
+import { useSaveTransformation } from "@/hooks/save-transformation";
 import { AspectRatioKeyField, TransformationConfig } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Transformation } from "@prisma/client";
+import { Transformation, TRANSFORMATION_TYPE } from "@prisma/client";
 import {
   IconDeviceFloppy,
   IconPaintFilled,
@@ -41,7 +39,6 @@ import {
 import { Input } from "../../ui/input";
 import DeleteTransformationDialog from "../DeleteTransformationDialog";
 import TransformedImage from "../TransformedImage";
-import { useSaveTransformation } from "@/hooks/save-transformation";
 
 type GenerativeFillFormProps = {
   transformation: Transformation;
@@ -129,7 +126,7 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
       width,
       height,
       aspectRatio,
-      transformationType: "GENERATIVE_FILL",
+      transformationType: TRANSFORMATION_TYPE.GENERATIVE_FILL,
       fillBackground: true,
     });
   };

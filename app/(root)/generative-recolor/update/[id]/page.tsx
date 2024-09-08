@@ -12,7 +12,7 @@ const TransformationPage = async ({ params }: { params: { id: string } }) => {
     },
   });
 
-  if (!transformation) redirect(`/${REDIRECTION.OBJECT_REMOVAL}`);
+  if (!transformation) redirect(`/${REDIRECTION.GENERATIVE_RECOLOR}`);
 
   return (
     <>

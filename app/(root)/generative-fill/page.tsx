@@ -1,5 +1,6 @@
 import MediaUploader from "@/components/Media/MediaUploader";
 import { REDIRECTION } from "@/types";
+import { TRANSFORMATION_TYPE } from "@prisma/client";
 import { IconSparkles } from "@tabler/icons-react";
 
 const GenerativeFill = () => {
@@ -11,7 +12,7 @@ const GenerativeFill = () => {
       </h1>
       <MediaUploader
         redirectTo={REDIRECTION.GENERATIVE_FILL}
-        transformationType="GENERATIVE_FILL"
+        transformationType={TRANSFORMATION_TYPE.GENERATIVE_FILL}
       />
     </div>
   );

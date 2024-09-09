@@ -71,15 +71,8 @@ const ExportTransformation = ({
     if (selectedFormat && config) {
       setIsPending(true);
 
-      const {
-        aspectRatio,
-        remove,
-        height,
-        width,
-        fillBackground,
-        recolor,
-        replaceColor,
-      } = config;
+      const { aspectRatio, remove, height, width, fillBackground, recolor } =
+        config;
 
       const image = getCldImageUrl({
         fillBackground,
@@ -88,7 +81,6 @@ const ExportTransformation = ({
         aspectRatio: aspectRatio,
         remove,
         recolor,
-        replaceColor,
         width,
         height,
       });

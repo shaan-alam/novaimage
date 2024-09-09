@@ -235,7 +235,8 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
         </Form>
         {transformation && (
           <ExportTransformation
-            transformation={{ ...transformation, ...config }}
+            publicId={transformation.publicId}
+            config={config}
           />
         )}
         <div className="mt-auto">

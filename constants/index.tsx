@@ -1,3 +1,4 @@
+import { zodTransformationTypeSchema } from "@/types";
 import {
   IconBackground,
   IconColorFilter,
@@ -5,7 +6,28 @@ import {
   IconSparkles,
 } from "@tabler/icons-react";
 import Image from "next/image";
+import { z } from "zod";
 
+export const transformationConfigSchema = z.object({
+  title: z.string(),
+  fillBackground: z.boolean().optional(),
+  remove: z.string().optional(),
+  transformationType: zodTransformationTypeSchema,
+  recolor: z
+    .object({
+      prompt: z.string(),
+      multiple: z.boolean(),
+      to: z.string(),
+    })
+    .optional(),
+  aspectRatio: z
+    .string()
+    .min(1, { message: "Aspect Ratio is required" })
+    .optional(),
+  aspect_ratio_key: z.string().optional(),
+  height: z.number().optional(),
+  width: z.number().optional(),
+});
 
 export const SIDEBAR_LINKS = [
   {
@@ -19,7 +41,7 @@ export const SIDEBAR_LINKS = [
     icon: IconSparkles,
   },
   {
-    label: "Recolor",
+    label: "Generative Recolor",
     href: "/generative-recolor",
     icon: IconColorFilter,
   },

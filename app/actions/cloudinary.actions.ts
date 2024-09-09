@@ -1,4 +1,5 @@
 "use server";
+import { transformationConfigSchema } from "@/constants";
 import { db } from "@/db";
 import { zodTransformationTypeSchema } from "@/types";
 import { auth } from "@clerk/nextjs/server";
@@ -74,12 +75,20 @@ export const applyTransformationAction = createServerAction()
         height: z.number(),
         width: z.number(),
         remove: z.string().optional(),
+        recolor: z
+          .object({
+            prompt: z.string(),
+            to: z.string(),
+            multiple: z.boolean(),
+          })
+          .optional(),
       }),
     })
   )
   .handler(async ({ input }) => {
     const { config, publicId } = input;
 
+    console.log(config.recolor?.to);
     const transformationURL = await getCldImageUrl({
       src: publicId,
       ...config,
@@ -98,19 +107,7 @@ export const saveTransformationAction = createServerAction()
     z.object({
       id: z.string(),
       publicId: z.string().min(1, { message: "Public ID is required" }),
-      config: z.object({
-        title: z.string(),
-        fillBackground: z.boolean().optional(),
-        remove: z.string().optional(),
-        transformationType: zodTransformationTypeSchema,
-        aspectRatio: z
-          .string()
-          .min(1, { message: "Aspect Ratio is required" })
-          .optional(),
-        aspect_ratio_key: z.string().optional(),
-        height: z.number(),
-        width: z.number(),
-      }),
+      config: transformationConfigSchema,
     })
   )
   .handler(async ({ input }) => {
@@ -132,6 +129,7 @@ export const saveTransformationAction = createServerAction()
       width,
       transformationType,
       remove,
+      recolor,
     } = config;
 
     const transformationURL = getCldImageUrl({
@@ -140,9 +138,14 @@ export const saveTransformationAction = createServerAction()
       aspectRatio,
       height,
       width,
+      recolor: {
+        prompt: recolor?.prompt,
+        to: recolor?.to,
+        multiple: recolor?.multiple,
+      },
     });
 
-    const transformation = db.transformation.update({
+    const transformation = await db.transformation.update({
       where: {
         id,
       },
@@ -157,6 +160,15 @@ export const saveTransformationAction = createServerAction()
         prompt: remove,
       },
     });
+
+    if (recolor && transformationType === "GENERATIVE_RECOLOR") {
+      await db.recolor.create({
+        data: {
+          ...recolor,
+          transformationId: transformation.id,
+        },
+      });
+    }
 
     return transformation;
   });

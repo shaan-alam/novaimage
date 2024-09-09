@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { IconChevronRight, IconDownload } from "@tabler/icons-react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { getCldImageUrl } from "next-cloudinary";
-import { Transformation } from "@prisma/client";
 import { downloadImage } from "@/lib/utils";
+import { TransformationConfig } from "@/types";
+import { IconChevronRight, IconDownload } from "@tabler/icons-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { getCldImageUrl } from "next-cloudinary";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 
 interface ButtonRadioProps {
@@ -46,9 +46,11 @@ interface ImageFormat {
 }
 
 const ExportTransformation = ({
-  transformation,
+  publicId,
+  config,
 }: {
-  transformation: Transformation | null;
+  publicId: string;
+  config: TransformationConfig;
 }) => {
   const [isPending, setIsPending] = useState(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -66,22 +68,21 @@ const ExportTransformation = ({
   };
 
   const handleExport = async () => {
-    if (selectedFormat && transformation) {
+    if (selectedFormat && config) {
       setIsPending(true);
 
-      const { aspectRatio, publicId, transformationType, prompt } =
-        transformation;
-
-      console.log("transformation", transformation);
+      const { aspectRatio, remove, height, width, fillBackground, recolor } =
+        config;
 
       const image = getCldImageUrl({
-        fillBackground: transformationType === "GENERATIVE_FILL",
+        fillBackground,
         src: publicId,
         format: selectedFormat,
-        aspectRatio: aspectRatio as string,
-        remove: (transformationType === "OBJECT_REMOVAL"
-          ? prompt
-          : "") as string,
+        aspectRatio: aspectRatio,
+        remove,
+        recolor,
+        width,
+        height,
       });
 
       toast

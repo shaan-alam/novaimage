@@ -162,12 +162,29 @@ export const saveTransformationAction = createServerAction()
     });
 
     if (recolor && transformationType === "GENERATIVE_RECOLOR") {
-      await db.recolor.create({
-        data: {
-          ...recolor,
+      const existingRecolor = await db.recolor.findUnique({
+        where: {
           transformationId: transformation.id,
         },
       });
+
+      if (!existingRecolor) {
+        await db.recolor.create({
+          data: {
+            ...recolor,
+            transformationId: transformation.id,
+          },
+        });
+      } else {
+        await db.recolor.update({
+          where: {
+            transformationId: transformation.id,
+          },
+          data: {
+            ...recolor,
+          },
+        });
+      }
     }
 
     return transformation;

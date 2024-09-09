@@ -47,7 +47,7 @@ model Transformation {
   title              String
   prompt             String?
   thumbnail          String
-  user               User                 @relation(fields: [userId], references: [id])
+  user               User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId             String
   aspect_ratio_key   String
   recolor            Recolor?
@@ -55,7 +55,7 @@ model Transformation {
 
 model Recolor {
   id               String         @id @default(cuid())
-  transformation   Transformation @relation(fields: [transformationId], references: [id])
+  transformation   Transformation @relation(fields: [transformationId], references: [id], onDelete: Cascade)
   transformationId String         @unique
 
   prompt   String

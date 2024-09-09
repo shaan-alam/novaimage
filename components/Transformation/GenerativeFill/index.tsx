@@ -247,7 +247,10 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
       </div>
       <div className="w-[80%] px-6 py-4 bg-background backdrop-blur-lg border border-secondary rounded-xl flex flex-col items-center justify-center">
         <ScrollArea className="h-[90%]">
-          <TransformedImage transformation={data} config={config} />
+          <TransformedImage
+            publicId={transformation.publicId}
+            config={config}
+          />
         </ScrollArea>
       </div>
     </div>

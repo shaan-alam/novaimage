@@ -26,10 +26,15 @@ import ExportTransformation from "../../shared/ExportTransformation";
 import DeleteTransformationDialog from "../DeleteTransformationDialog";
 import TransformedImage from "../TransformedImage";
 import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import OriginalImage from "../OriginalImage";
+import { v4 } from "uuid";
 
 type ObjectRemovalProps = {
   transformation: Transformation & { recolor: Recolor | null };
 };
+
+type ActiveTab = "original-image" | "transformed-image" | "compare";
 
 const formSchema = z.object({
   title: z.string().optional(),
@@ -39,24 +44,22 @@ const formSchema = z.object({
 });
 
 const GenerativeRecolor = ({ transformation }: ObjectRemovalProps) => {
-  const [transformationURL, setTransformationURL] = useState("");
+  const [activeTab, setActiveTab] = useState<ActiveTab>("original-image");
 
-  const {
-    isPending,
-    data,
-    execute: applyTransformation,
-  } = useServerAction(applyTransformationAction);
+  const { isPending, execute: applyTransformation } = useServerAction(
+    applyTransformationAction
+  );
 
   const { isPending: isSaving, saveTransformation } =
     useSaveTransformation(transformation);
 
   const [config, setConfig] = useState<TransformationConfig>({
-    height: 0,
-    width: 0,
+    height: transformation.original_height,
+    width: transformation.original_width,
     recolor: {
-      prompt: "",
-      to: "",
-      multiple: false,
+      prompt: transformation.recolor?.prompt || "",
+      to: transformation.recolor?.to.substring(1) || "",
+      multiple: transformation.recolor?.multiple || false,
     },
   });
 
@@ -94,9 +97,7 @@ const GenerativeRecolor = ({ transformation }: ObjectRemovalProps) => {
           success: "Success! Loading your image..",
         }
       )
-      .then((value) =>
-        setTransformationURL(value[0]?.transformationURL as string)
-      );
+      .then((value) => setActiveTab("transformed-image"));
   };
 
   const onSaveTransformation = (values: z.infer<typeof formSchema>) => {
@@ -111,7 +112,7 @@ const GenerativeRecolor = ({ transformation }: ObjectRemovalProps) => {
       recolor: {
         prompt,
         multiple,
-        to,
+        to: to.substring(1),
       },
     });
   };
@@ -224,9 +225,28 @@ const GenerativeRecolor = ({ transformation }: ObjectRemovalProps) => {
         </div>
         <div className="w-[80%] px-6 py-4 bg-background border border-secondary rounded-xl flex flex-col items-center justify-center">
           <ScrollArea className="h-[90%]">
-            {config && (
-              <TransformedImage transformation={data} config={config} />
-            )}
+            <Tabs
+              value={activeTab}
+              onValueChange={(value) => setActiveTab(value as ActiveTab)}
+              className="w-[400px]"
+            >
+              <TabsList>
+                <TabsTrigger value="original-image">Original Image</TabsTrigger>
+                <TabsTrigger value="transformed-image">
+                  Transformed Image
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="original-image">
+                <OriginalImage transformation={transformation} />
+              </TabsContent>
+              <TabsContent value="transformed-image">
+                <TransformedImage
+                  publicId={transformation.publicId}
+                  config={config}
+                  key={v4()}
+                />
+              </TabsContent>
+            </Tabs>
           </ScrollArea>
         </div>
       </div>

@@ -88,7 +88,6 @@ export const applyTransformationAction = createServerAction()
   .handler(async ({ input }) => {
     const { config, publicId } = input;
 
-    console.log(config.recolor?.to);
     const transformationURL = await getCldImageUrl({
       src: publicId,
       ...config,

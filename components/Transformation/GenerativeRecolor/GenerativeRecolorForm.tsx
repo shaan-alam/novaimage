@@ -1,6 +1,7 @@
 "use client";
 import { applyTransformationAction } from "@/app/actions/cloudinary.actions";
 import { Button } from "@/components/ui/button";
+import ColorPicker from "@/components/ui/color-picker";
 import {
   Form,
   FormControl,
@@ -10,12 +11,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Textarea } from "@/components/ui/textarea";
 import { useSaveTransformation } from "@/hooks/save-transformation";
 import { TransformationConfig } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Transformation, TRANSFORMATION_TYPE } from "@prisma/client";
-import { IconSparkles } from "@tabler/icons-react";
+import { Recolor, Transformation, TRANSFORMATION_TYPE } from "@prisma/client";
+import { IconColorFilter } from "@tabler/icons-react";
 import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -25,17 +25,20 @@ import { useServerAction } from "zsa-react";
 import ExportTransformation from "../../shared/ExportTransformation";
 import DeleteTransformationDialog from "../DeleteTransformationDialog";
 import TransformedImage from "../TransformedImage";
+import { Switch } from "@/components/ui/switch";
 
 type ObjectRemovalProps = {
-  transformation: Transformation;
+  transformation: Transformation & { recolor: Recolor | null };
 };
 
 const formSchema = z.object({
+  title: z.string().optional(),
   prompt: z.string(),
-  title: z.string(),
+  to: z.string(),
+  multiple: z.boolean().optional().default(false),
 });
 
-const ObjectRemovalForm = ({ transformation }: ObjectRemovalProps) => {
+const GenerativeRecolor = ({ transformation }: ObjectRemovalProps) => {
   const [transformationURL, setTransformationURL] = useState("");
 
   const {
@@ -50,24 +53,34 @@ const ObjectRemovalForm = ({ transformation }: ObjectRemovalProps) => {
   const [config, setConfig] = useState<TransformationConfig>({
     height: 0,
     width: 0,
-    remove: "",
+    recolor: {
+      prompt: "",
+      to: "",
+      multiple: false,
+    },
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      prompt: transformation.prompt || "",
       title: transformation.title || "",
+      prompt: transformation.recolor?.prompt || "",
+      to: transformation.recolor?.to || "",
+      multiple: transformation.recolor?.multiple || false,
     },
   });
 
   const onApplyTransformation = async () => {
-    const { prompt } = form.getValues();
+    const { prompt, to, multiple } = form.getValues();
 
     const config = {
-      remove: prompt,
       height: transformation.original_height,
       width: transformation.original_width,
+      recolor: {
+        prompt,
+        to: to.substring(1),
+        multiple,
+      },
     };
 
     setConfig(config);
@@ -76,7 +89,7 @@ const ObjectRemovalForm = ({ transformation }: ObjectRemovalProps) => {
       .promise(
         applyTransformation({ config, publicId: transformation.publicId }),
         {
-          loading: "Hang on! We're removing the object from your image",
+          loading: "Hang on! We're recoloring your image...",
           error: "Sorry! We could not perform the request at the moment!",
           success: "Success! Loading your image..",
         }
@@ -88,14 +101,18 @@ const ObjectRemovalForm = ({ transformation }: ObjectRemovalProps) => {
 
   const onSaveTransformation = (values: z.infer<typeof formSchema>) => {
     const { width, height } = config;
-    const { prompt, title } = values;
+    const { title, prompt, to, multiple } = values;
 
     saveTransformation({
       height,
       width,
       title: title || "",
-      transformationType: TRANSFORMATION_TYPE.OBJECT_REMOVAL,
-      remove: prompt,
+      transformationType: TRANSFORMATION_TYPE.GENERATIVE_RECOLOR,
+      recolor: {
+        prompt,
+        multiple,
+        to,
+      },
     });
   };
 
@@ -103,13 +120,13 @@ const ObjectRemovalForm = ({ transformation }: ObjectRemovalProps) => {
     <>
       <div className="flex gap-x-2 h-[98vh]">
         <div className="flex flex-col w-[20%] bg-background px-6 py-4 border border-secondary rounded-xl">
-          <h1 className="flex items-center text-[#a9c7db] font-semibold text-xl mt-7">
-            <IconSparkles />
-            &nbsp; Object Removal
+          <h1 className="flex items-center text-secondary-foreground font-semibold text-xl mt-7">
+            <IconColorFilter />
+            &nbsp; Generative Recolor
           </h1>
           <p className="mt-4 leading-7 text-sm text-neutral-400">
-            Remove unwanted objects from your photos seamlessly. No more
-            photobombs or distracting elements!
+            Recolor your images with a single click. Change colors to match your
+            brand or create entirely new moods.
           </p>
           <Image
             src={transformation?.thumbnail as string}
@@ -138,32 +155,55 @@ const ObjectRemovalForm = ({ transformation }: ObjectRemovalProps) => {
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Prompt</FormLabel>
+                    <FormLabel>Object to Recolor</FormLabel>
                     <FormControl>
-                      <Textarea
-                        placeholder="Describe what you want to remove from the image..."
-                        {...field}
-                      />
+                      <Input placeholder="Tshirt" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
               />
-              <div className="flex space-x-2">
+              <FormField
+                name="to"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem className="mt-2">
+                    <FormLabel>Pick a color</FormLabel>
+                    <ColorPicker
+                      color={field.value}
+                      onChange={(value) => form.setValue("to", value)}
+                      className="w-full"
+                    />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="multiple"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem className="mt-2">
+                    <FormLabel>Select multiple: </FormLabel>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      aria-readonly
+                    />
+                  </FormItem>
+                )}
+              />
+              <div className="flex space-x-2 mt-2">
                 <Button
                   type="button"
                   className="mt-2 w-full"
                   isLoading={isPending}
                   onClick={onApplyTransformation}
-                  disabled={!form.getValues().prompt}
                 >
-                  Remove Object
+                  Recolor Object
                 </Button>
                 <Button
                   variant="secondary"
                   type="submit"
                   className="mt-2 w-full"
-                  isLoading={isPending}
-                  disabled={!transformationURL}
+                  isLoading={isSaving}
                 >
                   Save
                 </Button>
@@ -194,4 +234,4 @@ const ObjectRemovalForm = ({ transformation }: ObjectRemovalProps) => {
   );
 };
 
-export default ObjectRemovalForm;
+export default GenerativeRecolor;

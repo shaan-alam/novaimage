@@ -32,4 +32,9 @@ export type TransformationConfig = {
   title?: string;
   height: number;
   width: number;
+  recolor?: {
+    to: string;
+    prompt: string;
+    multiple: boolean;
+  };
 };

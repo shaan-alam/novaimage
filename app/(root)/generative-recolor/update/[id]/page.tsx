@@ -1,4 +1,4 @@
-import ObjectRemovalForm from "@/components/Transformation/ObjectRemoval/ObjectRemovalForm";
+import GenerativeRecolorForm from "@/components/Transformation/GenerativeRecolor/GenerativeRecolorForm";
 import { db } from "@/db";
 import { REDIRECTION } from "@/types";
 import { redirect } from "next/navigation";
@@ -10,13 +10,16 @@ const TransformationPage = async ({ params }: { params: { id: string } }) => {
     where: {
       id,
     },
+    include: {
+      recolor: true
+    }
   });
 
   if (!transformation) redirect(`/${REDIRECTION.GENERATIVE_RECOLOR}`);
 
   return (
     <>
-      <ObjectRemovalForm transformation={transformation} />
+      <GenerativeRecolorForm transformation={transformation} />
     </>
   );
 };

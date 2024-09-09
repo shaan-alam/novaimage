@@ -1,4 +1,5 @@
 import { saveTransformationAction } from "@/app/actions/cloudinary.actions";
+import { transformationConfigSchema } from "@/constants";
 import { zodTransformationTypeSchema } from "@/types";
 import { Transformation } from "@prisma/client";
 import toast from "react-hot-toast";
@@ -20,7 +21,9 @@ export const useSaveTransformation = (transformation: Transformation) => {
   const { id, publicId } = transformation;
   const { execute: save, ...rest } = useServerAction(saveTransformationAction);
 
-  const saveTransformation = (config: Config) => {
+  const saveTransformation = (
+    config: z.infer<typeof transformationConfigSchema>
+  ) => {
     toast.promise(
       save({
         config,

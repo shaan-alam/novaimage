@@ -1,12 +1,12 @@
+import ReactQueryProvider from "@/components/Providers/react-query-provider";
+import { ThemeProvider } from "@/components/Providers/theme-provider";
 import { ClerkProvider } from "@clerk/nextjs";
+import { IconRosetteDiscountCheckFilled } from "@tabler/icons-react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import { ThemeProvider } from "@/components/Providers/theme-provider";
-import { Toaster } from "react-hot-toast";
-import { IconRosetteDiscountCheckFilled } from "@tabler/icons-react";
 import Image from "next/image";
-import ReactQueryProvider from "@/components/Providers/react-query-provider";
+import { Toaster } from "react-hot-toast";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +25,7 @@ export default function RootLayout({
       <html lang="en">
         <body className={inter.className}>
           <ReactQueryProvider>
-            <ThemeProvider defaultTheme="dark" attribute="class">
+            <ThemeProvider defaultTheme="system" attribute="class">
               {children}
             </ThemeProvider>
             <Toaster
@@ -56,7 +56,7 @@ export default function RootLayout({
                 style: {
                   background: "#333",
                   color: "#e1e1e1",
-                  border: '1px solid #333'
+                  border: "1px solid #333",
                 },
               }}
             />

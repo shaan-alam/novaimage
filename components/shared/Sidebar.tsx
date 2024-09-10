@@ -24,7 +24,7 @@ const Sidebar = ({ user }: { user: User }) => {
   return (
     <SidebarUI open={open} setOpen={setOpen}>
       <SidebarBody className="relative">
-        <div className="h-[95vh] flex flex-col">
+        <div className="h-screen flex flex-col">
           <div className="my-6 flex items-center space-x-2">
             <Image
               src="/images/logo.png"
@@ -63,9 +63,9 @@ const Sidebar = ({ user }: { user: User }) => {
           </div>
           <div className="mt-auto">
             <Link
-              href="buy-credits"
+              href=".buy-credits"
               className={cn(
-                "text-neutral-400 hover:dark:text-neutral-200 text-sm mb-6 hover:bg-neutral-700 rounded-xl",
+                "text-secondary-foreground hover:text-primary-foreground text-sm mb-6 hover:bg-primary rounded-xl",
                 open ? "flex items-center space-x-2 p-2" : "block"
               )}
             >
@@ -87,7 +87,7 @@ const Sidebar = ({ user }: { user: User }) => {
                 <UserButton appearance={dark as Theme} />
                 <p
                   className={cn(
-                    "text-gray-300 font-medium transition-all duration-500",
+                    "text-primary font-medium",
                     open ? "block" : "hidden"
                   )}
                 >

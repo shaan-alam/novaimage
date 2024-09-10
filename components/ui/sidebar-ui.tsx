@@ -96,7 +96,7 @@ export const DesktopSidebar = ({
     <div className="mr-2 ml-1 relative">
       <motion.div
         className={cn(
-          "h-full px-4 py-4 hidden rounded-xl  md:flex md:flex-col bg-[#3b3b3b33] border-accent  backdrop-blur-md bg-opacity-80 w-[300px] flex-shrink-0",
+          "h-full px-4 py-4 hidden rounded-xl  md:flex md:flex-col bg-background border border-border  w-[300px] flex-shrink-0",
           className
         )}
         animate={{
@@ -180,13 +180,13 @@ export const SidebarLink = ({
       className={cn(
         "flex items-center justify-start gap-2  group/sidebar",
         open && "p-2",
-        isActive ? "bg-primary rounded-xl text-white" : "text-neutral-400",
+        isActive ? "bg-primary rounded-xl text-primary-foreground" : "text-primary",
         className
       )}
       {...props}
     >
       <link.icon
-        className={cn("h-[30px] w-[30px] rounded-full p-1", isActive ? "text-white": "text-neutral-400")}
+        className={cn("h-[30px] w-[30px] rounded-full p-1", isActive ? "text-primary-foreground": "text-primary")}
       />
 
       <motion.span

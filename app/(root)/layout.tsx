@@ -12,11 +12,9 @@ const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
 
   return (
     <main className="bg-background app-layout">
-      <div className="flex h-screen w-full py-2">
+      <div className="flex h-[93vh] w-full py-2">
         <Sidebar user={JSON.parse(JSON.stringify(user))} />
-        <div className="w-full">
-          {children}
-        </div>
+        <div className="w-full">{children}</div>
       </div>
     </main>
   );

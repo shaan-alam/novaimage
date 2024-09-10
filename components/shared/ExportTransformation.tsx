@@ -30,10 +30,10 @@ const ButtonRadio: React.FC<ButtonRadioProps> = ({
     role="radio"
     aria-checked={checked}
     onClick={() => onChange(id)}
-    className={`px-3 py-2 rounded-md text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
+    className={`px-3 py-2 rounded-md text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-secondary ${
       checked
-        ? "bg-[#2f3f4d] text-primary-foreground"
-        : "bg-[#182027] text-secondary-foreground hover:bg-[#182027]/80"
+        ? "bg-[#333] border-[#333] text-primary-foreground"
+        : "bg-secondary/60 text-secondary-foreground hover:bg-[#333]"
     }`}
   >
     {label}

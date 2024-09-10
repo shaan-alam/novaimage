@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import { useSaveTransformation } from "@/hooks/save-transformation";
-import { TransformationConfig } from "@/types";
+import { ActiveTab, TransformationConfig } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Transformation, TRANSFORMATION_TYPE } from "@prisma/client";
 import { IconSparkles } from "@tabler/icons-react";
@@ -25,6 +25,9 @@ import { useServerAction } from "zsa-react";
 import ExportTransformation from "../../shared/ExportTransformation";
 import DeleteTransformationDialog from "../DeleteTransformationDialog";
 import TransformedImage from "../TransformedImage";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import OriginalImage from "../OriginalImage";
+import { v4 } from "uuid";
 
 type ObjectRemovalProps = {
   transformation: Transformation;
@@ -36,21 +39,20 @@ const formSchema = z.object({
 });
 
 const ObjectRemovalForm = ({ transformation }: ObjectRemovalProps) => {
-  const [transformationURL, setTransformationURL] = useState("");
+  const [activeTab, setActiveTab] = useState<ActiveTab>("original-image");
+  const [isTransformed, setTransformed] = useState(false);
 
-  const {
-    isPending,
-    data,
-    execute: applyTransformation,
-  } = useServerAction(applyTransformationAction);
+  const { isPending, execute: applyTransformation } = useServerAction(
+    applyTransformationAction
+  );
 
   const { isPending: isSaving, saveTransformation } =
     useSaveTransformation(transformation);
 
   const [config, setConfig] = useState<TransformationConfig>({
-    height: 0,
-    width: 0,
-    remove: "",
+    height: transformation.transformed_height || 0,
+    width: transformation.transformed_width || 0,
+    remove: transformation.prompt || "",
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -81,9 +83,10 @@ const ObjectRemovalForm = ({ transformation }: ObjectRemovalProps) => {
           success: "Success! Loading your image..",
         }
       )
-      .then((value) =>
-        setTransformationURL(value[0]?.transformationURL as string)
-      );
+      .then(() => {
+        setTransformed(true);
+        setActiveTab("transformed-image");
+      });
   };
 
   const onSaveTransformation = (values: z.infer<typeof formSchema>) => {
@@ -162,8 +165,8 @@ const ObjectRemovalForm = ({ transformation }: ObjectRemovalProps) => {
                   variant="secondary"
                   type="submit"
                   className="mt-2 w-full"
-                  isLoading={isPending}
-                  disabled={!transformationURL}
+                  isLoading={isSaving}
+                  disabled={!isTransformed}
                 >
                   Save
                 </Button>
@@ -184,9 +187,29 @@ const ObjectRemovalForm = ({ transformation }: ObjectRemovalProps) => {
         </div>
         <div className="w-[80%] px-6 py-4 bg-background border border-secondary rounded-xl flex flex-col items-center justify-center">
           <ScrollArea className="h-[90%]">
-            {config && (
-              <TransformedImage transformation={data} config={config} />
-            )}
+            <Tabs
+              value={activeTab}
+              onValueChange={(value) => setActiveTab(value as ActiveTab)}
+            >
+              <TabsList className="w-full">
+                <TabsTrigger className="w-full" value="original-image">
+                  Original Image
+                </TabsTrigger>
+                <TabsTrigger className="w-full" value="transformed-image">
+                  Transformed Image
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent className="w-full" value="original-image">
+                <OriginalImage transformation={transformation} />
+              </TabsContent>
+              <TabsContent className="w-full" value="transformed-image">
+                <TransformedImage
+                  publicId={transformation.publicId}
+                  config={config}
+                  key={v4()}
+                />
+              </TabsContent>
+            </Tabs>
           </ScrollArea>
         </div>
       </div>

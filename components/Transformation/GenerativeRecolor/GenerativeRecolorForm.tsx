@@ -11,8 +11,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSaveTransformation } from "@/hooks/save-transformation";
-import { TransformationConfig } from "@/types";
+import { ActiveTab, TransformationConfig } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Recolor, Transformation, TRANSFORMATION_TYPE } from "@prisma/client";
 import { IconColorFilter } from "@tabler/icons-react";
@@ -20,12 +22,13 @@ import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { v4 } from "uuid";
 import { z } from "zod";
 import { useServerAction } from "zsa-react";
 import ExportTransformation from "../../shared/ExportTransformation";
 import DeleteTransformationDialog from "../DeleteTransformationDialog";
+import OriginalImage from "../OriginalImage";
 import TransformedImage from "../TransformedImage";
-import { Switch } from "@/components/ui/switch";
 
 type ObjectRemovalProps = {
   transformation: Transformation & { recolor: Recolor | null };
@@ -39,24 +42,23 @@ const formSchema = z.object({
 });
 
 const GenerativeRecolor = ({ transformation }: ObjectRemovalProps) => {
-  const [transformationURL, setTransformationURL] = useState("");
+  const [activeTab, setActiveTab] = useState<ActiveTab>("original-image");
+  const [isTransformed, setTransformed] = useState(false);
 
-  const {
-    isPending,
-    data,
-    execute: applyTransformation,
-  } = useServerAction(applyTransformationAction);
+  const { isPending, execute: applyTransformation } = useServerAction(
+    applyTransformationAction
+  );
 
   const { isPending: isSaving, saveTransformation } =
     useSaveTransformation(transformation);
 
   const [config, setConfig] = useState<TransformationConfig>({
-    height: 0,
-    width: 0,
+    height: transformation.original_height,
+    width: transformation.original_width,
     recolor: {
-      prompt: "",
-      to: "",
-      multiple: false,
+      prompt: transformation.recolor?.prompt || "",
+      to: transformation.recolor?.to.substring(1) || "",
+      multiple: transformation.recolor?.multiple || false,
     },
   });
 
@@ -94,9 +96,10 @@ const GenerativeRecolor = ({ transformation }: ObjectRemovalProps) => {
           success: "Success! Loading your image..",
         }
       )
-      .then((value) =>
-        setTransformationURL(value[0]?.transformationURL as string)
-      );
+      .then(() => {
+        setTransformed(true);
+        setActiveTab("transformed-image");
+      });
   };
 
   const onSaveTransformation = (values: z.infer<typeof formSchema>) => {
@@ -111,7 +114,7 @@ const GenerativeRecolor = ({ transformation }: ObjectRemovalProps) => {
       recolor: {
         prompt,
         multiple,
-        to,
+        to: to.substring(1),
       },
     });
   };
@@ -204,6 +207,7 @@ const GenerativeRecolor = ({ transformation }: ObjectRemovalProps) => {
                   type="submit"
                   className="mt-2 w-full"
                   isLoading={isSaving}
+                  disabled={!isTransformed}
                 >
                   Save
                 </Button>
@@ -224,9 +228,29 @@ const GenerativeRecolor = ({ transformation }: ObjectRemovalProps) => {
         </div>
         <div className="w-[80%] px-6 py-4 bg-background border border-secondary rounded-xl flex flex-col items-center justify-center">
           <ScrollArea className="h-[90%]">
-            {config && (
-              <TransformedImage transformation={data} config={config} />
-            )}
+            <Tabs
+              value={activeTab}
+              onValueChange={(value) => setActiveTab(value as ActiveTab)}
+            >
+              <TabsList className="w-full">
+                <TabsTrigger className="w-full" value="original-image">
+                  Original Image
+                </TabsTrigger>
+                <TabsTrigger className="w-full" value="transformed-image">
+                  Transformed Image
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent className="w-full" value="original-image">
+                <OriginalImage transformation={transformation} />
+              </TabsContent>
+              <TabsContent className="w-full" value="transformed-image">
+                <TransformedImage
+                  publicId={transformation.publicId}
+                  config={config}
+                  key={v4()}
+                />
+              </TabsContent>
+            </Tabs>
           </ScrollArea>
         </div>
       </div>

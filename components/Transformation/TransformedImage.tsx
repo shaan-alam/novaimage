@@ -5,25 +5,16 @@ import { CldImage } from "next-cloudinary";
 import { PlaceholderValue } from "next/dist/shared/lib/get-img-props";
 
 type TransformedImageProps = {
-  transformation:
-    | {
-        height: number;
-        width: number;
-        publicId: string;
-      }
-    | undefined;
+  publicId: string;
   config: TransformationConfig;
 };
 
-const TransformedImage = ({
-  transformation,
-  config,
-}: TransformedImageProps) => {
+const TransformedImage = ({ publicId, config }: TransformedImageProps) => {
   return (
     <div className="h-full flex items-center justify-center">
-      {transformation && (
+      {publicId && (
         <CldImage
-          src={transformation?.publicId}
+          src={publicId}
           alt="Transformed Image"
           placeholder={dataUrl as PlaceholderValue}
           {...config}

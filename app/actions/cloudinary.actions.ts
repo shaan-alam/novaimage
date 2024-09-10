@@ -88,7 +88,6 @@ export const applyTransformationAction = createServerAction()
   .handler(async ({ input }) => {
     const { config, publicId } = input;
 
-    console.log(config.recolor?.to);
     const transformationURL = await getCldImageUrl({
       src: publicId,
       ...config,
@@ -134,15 +133,10 @@ export const saveTransformationAction = createServerAction()
 
     const transformationURL = getCldImageUrl({
       src: publicId,
-      fillBackground: true,
-      aspectRatio,
       height,
       width,
-      recolor: {
-        prompt: recolor?.prompt,
-        to: recolor?.to,
-        multiple: recolor?.multiple,
-      },
+      recolor,
+      ...config,
     });
 
     const transformation = await db.transformation.update({
@@ -153,21 +147,39 @@ export const saveTransformationAction = createServerAction()
         title,
         transformationType,
         transformationURL,
-        aspectRatio,
+        prompt: remove,
         aspect_ratio_key: aspect_ratio_key as string,
         transformed_height: height,
         transformed_width: width,
-        prompt: remove,
+        fillBackground: config.fillBackground,
+        aspectRatio: config.aspectRatio,
       },
     });
 
     if (recolor && transformationType === "GENERATIVE_RECOLOR") {
-      await db.recolor.create({
-        data: {
-          ...recolor,
+      const existingRecolor = await db.recolor.findUnique({
+        where: {
           transformationId: transformation.id,
         },
       });
+
+      if (!existingRecolor) {
+        await db.recolor.create({
+          data: {
+            ...recolor,
+            transformationId: transformation.id,
+          },
+        });
+      } else {
+        await db.recolor.update({
+          where: {
+            transformationId: transformation.id,
+          },
+          data: {
+            ...recolor,
+          },
+        });
+      }
     }
 
     return transformation;

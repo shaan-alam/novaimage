@@ -249,9 +249,11 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
             value={activeTab}
             onValueChange={(value) => setActiveTab(value as ActiveTab)}
           >
-            <TabsList>
-              <TabsTrigger value="original-image">Original Image</TabsTrigger>
-              <TabsTrigger value="transformed-image">
+            <TabsList className="w-full">
+              <TabsTrigger className="w-full" value="original-image">
+                Original Image
+              </TabsTrigger>
+              <TabsTrigger className="w-full" value="transformed-image">
                 Transformed Image
               </TabsTrigger>
             </TabsList>

@@ -43,6 +43,7 @@ const formSchema = z.object({
 
 const GenerativeRecolor = ({ transformation }: ObjectRemovalProps) => {
   const [activeTab, setActiveTab] = useState<ActiveTab>("original-image");
+  const [isTransformed, setTransformed] = useState(false);
 
   const { isPending, execute: applyTransformation } = useServerAction(
     applyTransformationAction
@@ -95,7 +96,10 @@ const GenerativeRecolor = ({ transformation }: ObjectRemovalProps) => {
           success: "Success! Loading your image..",
         }
       )
-      .then(() => setActiveTab("transformed-image"));
+      .then(() => {
+        setTransformed(true);
+        setActiveTab("transformed-image");
+      });
   };
 
   const onSaveTransformation = (values: z.infer<typeof formSchema>) => {
@@ -203,6 +207,7 @@ const GenerativeRecolor = ({ transformation }: ObjectRemovalProps) => {
                   type="submit"
                   className="mt-2 w-full"
                   isLoading={isSaving}
+                  disabled={!isTransformed}
                 >
                   Save
                 </Button>
@@ -226,18 +231,19 @@ const GenerativeRecolor = ({ transformation }: ObjectRemovalProps) => {
             <Tabs
               value={activeTab}
               onValueChange={(value) => setActiveTab(value as ActiveTab)}
-              className="w-[400px]"
             >
-              <TabsList>
-                <TabsTrigger value="original-image">Original Image</TabsTrigger>
-                <TabsTrigger value="transformed-image">
+              <TabsList className="w-full">
+                <TabsTrigger className="w-full" value="original-image">
+                  Original Image
+                </TabsTrigger>
+                <TabsTrigger className="w-full" value="transformed-image">
                   Transformed Image
                 </TabsTrigger>
               </TabsList>
-              <TabsContent value="original-image">
+              <TabsContent className="w-full" value="original-image">
                 <OriginalImage transformation={transformation} />
               </TabsContent>
-              <TabsContent value="transformed-image">
+              <TabsContent className="w-full" value="transformed-image">
                 <TransformedImage
                   publicId={transformation.publicId}
                   config={config}

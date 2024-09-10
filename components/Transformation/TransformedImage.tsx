@@ -7,14 +7,9 @@ import { PlaceholderValue } from "next/dist/shared/lib/get-img-props";
 type TransformedImageProps = {
   publicId: string;
   config: TransformationConfig;
-  slot?: string;
 };
 
-const TransformedImage = ({
-  publicId,
-  config,
-  slot = "second",
-}: TransformedImageProps) => {
+const TransformedImage = ({ publicId, config }: TransformedImageProps) => {
   return (
     <div className="h-full flex items-center justify-center">
       {publicId && (
@@ -23,7 +18,6 @@ const TransformedImage = ({
           alt="Transformed Image"
           placeholder={dataUrl as PlaceholderValue}
           {...config}
-          slot={slot}
         />
       )}
     </div>

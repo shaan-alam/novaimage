@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { aspectRatiosOptions, socialMediaPostDimensions } from "@/constants";
 import { useSaveTransformation } from "@/hooks/save-transformation";
 import { ActiveTab, AspectRatioKeyField, TransformationConfig } from "@/types";
@@ -24,6 +25,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { v4 } from "uuid";
 import { z } from "zod";
 import { useServerAction } from "zsa-react";
 import ExportTransformation from "../../shared/ExportTransformation";
@@ -38,11 +40,8 @@ import {
 } from "../../ui/form";
 import { Input } from "../../ui/input";
 import DeleteTransformationDialog from "../DeleteTransformationDialog";
-import TransformedImage from "../TransformedImage";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import OriginalImage from "../OriginalImage";
-import { v4 } from "uuid";
-import CompareTransformation from "../CompareTransformation";
+import TransformedImage from "../TransformedImage";
 
 type GenerativeFillFormProps = {
   transformation: Transformation;
@@ -58,10 +57,6 @@ const formSchema = z.object({
 
 const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
   const [activeTab, setActiveTab] = useState<ActiveTab>("original-image");
-
-  const [transformationURL, setTransformationURL] = useState<
-    string | undefined
-  >("");
 
   const [config, setConfig] = useState<TransformationConfig>({
     aspectRatio: transformation.aspectRatio || "",
@@ -259,7 +254,6 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
               <TabsTrigger value="transformed-image">
                 Transformed Image
               </TabsTrigger>
-              <TabsTrigger value="compare">Compare</TabsTrigger>
             </TabsList>
             <TabsContent className="w-full" value="original-image">
               <OriginalImage transformation={transformation} />
@@ -267,13 +261,6 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
             <TabsContent className="w-full" value="transformed-image">
               <TransformedImage
                 publicId={transformation.publicId}
-                config={config}
-                key={v4()}
-              />
-            </TabsContent>
-            <TabsContent className="w-full" value="compare">
-              <CompareTransformation
-                transformation={transformation}
                 config={config}
                 key={v4()}
               />

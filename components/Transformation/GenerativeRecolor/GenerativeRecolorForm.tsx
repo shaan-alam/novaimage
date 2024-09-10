@@ -95,7 +95,7 @@ const GenerativeRecolor = ({ transformation }: ObjectRemovalProps) => {
           success: "Success! Loading your image..",
         }
       )
-      .then((value) => setActiveTab("transformed-image"));
+      .then(() => setActiveTab("transformed-image"));
   };
 
   const onSaveTransformation = (values: z.infer<typeof formSchema>) => {

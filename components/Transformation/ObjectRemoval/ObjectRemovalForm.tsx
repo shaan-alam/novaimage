@@ -104,24 +104,16 @@ const ObjectRemovalForm = ({ transformation }: ObjectRemovalProps) => {
 
   return (
     <>
-      <div className="flex gap-x-2 h-[98vh]">
+      <div className="flex gap-x-2 h-full">
         <div className="flex flex-col w-[20%] bg-background px-6 py-4 border border-secondary rounded-xl">
-          <h1 className="flex items-center text-[#a9c7db] font-semibold text-xl mt-7">
+          <h1 className="flex items-center text-primary font-semibold text-xl mt-7">
             <IconSparkles />
             &nbsp; Object Removal
           </h1>
-          <p className="mt-4 leading-7 text-sm text-neutral-400">
+          <p className="my-4 leading-6 text-sm text-muted-foreground">
             Remove unwanted objects from your photos seamlessly. No more
             photobombs or distracting elements!
           </p>
-          <Image
-            src={transformation?.thumbnail as string}
-            alt="Original Image Thumbnail"
-            height={72}
-            width={72}
-            className="my-6 rounded-md"
-          />
-
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSaveTransformation)}>
               <FormField

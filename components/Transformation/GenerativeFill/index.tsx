@@ -145,23 +145,16 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
   };
 
   return (
-    <div className="flex gap-x-2 h-[98vh]">
-      <div className="flex flex-col backdrop-blur-lg w-[20%] bg-background/30 px-6 py-4 border border-secondary rounded-xl">
-        <h1 className="flex items-center text-[#a9c7db] font-semibold text-xl mt-7">
+    <div className="flex gap-x-2 h-full">
+      <div className="flex flex-col w-[20%] bg-background px-6 py-4 border border-secondary rounded-xl">
+        <h1 className="flex items-center text-primary font-semibold text-xl mt-7">
           <IconSparkles />
           &nbsp; Generative Fill
         </h1>
-        <p className="mt-4 leading-7 text-sm text-neutral-400">
+        <p className="mt-4 leading-6 text-sm text-muted-foreground">
           Transform your images effortlessly with our AI-powered generative fill
           feature, adding or removing elements with ease. 🚀
         </p>
-        <Image
-          src={transformation?.thumbnail as string}
-          alt="Original Image Thumbnail"
-          height={72}
-          width={72}
-          className="my-6 rounded-md"
-        />
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSaveTransformation)}>
             <FormField

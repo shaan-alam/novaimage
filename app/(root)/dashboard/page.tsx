@@ -3,7 +3,7 @@
 import TransformationCards from "@/components/Transformation/TransformationCards";
 import { IconTransform } from "@tabler/icons-react";
 
-const Dashboard = () => {
+export default async function Dashboard() {
   return (
     <div>
       <h1 className="flex items-center text-gray-400 font-bold text-2xl">
@@ -15,6 +15,4 @@ const Dashboard = () => {
       </div>
     </div>
   );
-};
-
-export default Dashboard;
+}

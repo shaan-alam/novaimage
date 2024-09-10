@@ -6,9 +6,13 @@ import { PlaceholderValue } from "next/dist/shared/lib/get-img-props";
 
 type OriginalImageProps = {
   transformation: Transformation;
+  slot?: string;
 };
 
-const OriginalImage = ({ transformation }: OriginalImageProps) => {
+const OriginalImage = ({
+  transformation,
+  slot = "first",
+}: OriginalImageProps) => {
   return (
     <CldImage
       src={transformation?.publicId}
@@ -16,6 +20,7 @@ const OriginalImage = ({ transformation }: OriginalImageProps) => {
       placeholder={dataUrl as PlaceholderValue}
       height={transformation.original_height}
       width={transformation.original_width}
+      slot={slot}
     />
   );
 };

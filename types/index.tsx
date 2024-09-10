@@ -38,3 +38,5 @@ export type TransformationConfig = {
     multiple: boolean;
   };
 };
+
+export type ActiveTab = "original-image" | "transformed-image" | "compare";

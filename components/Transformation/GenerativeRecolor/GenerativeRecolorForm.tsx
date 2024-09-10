@@ -11,8 +11,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSaveTransformation } from "@/hooks/save-transformation";
-import { TransformationConfig } from "@/types";
+import { ActiveTab, TransformationConfig } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Recolor, Transformation, TRANSFORMATION_TYPE } from "@prisma/client";
 import { IconColorFilter } from "@tabler/icons-react";
@@ -20,21 +22,17 @@ import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { v4 } from "uuid";
 import { z } from "zod";
 import { useServerAction } from "zsa-react";
 import ExportTransformation from "../../shared/ExportTransformation";
 import DeleteTransformationDialog from "../DeleteTransformationDialog";
-import TransformedImage from "../TransformedImage";
-import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import OriginalImage from "../OriginalImage";
-import { v4 } from "uuid";
+import TransformedImage from "../TransformedImage";
 
 type ObjectRemovalProps = {
   transformation: Transformation & { recolor: Recolor | null };
 };
-
-type ActiveTab = "original-image" | "transformed-image" | "compare";
 
 const formSchema = z.object({
   title: z.string().optional(),

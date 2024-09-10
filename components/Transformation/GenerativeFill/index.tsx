@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import { aspectRatiosOptions, socialMediaPostDimensions } from "@/constants";
 import { useSaveTransformation } from "@/hooks/save-transformation";
-import { AspectRatioKeyField, TransformationConfig } from "@/types";
+import { ActiveTab, AspectRatioKeyField, TransformationConfig } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Transformation, TRANSFORMATION_TYPE } from "@prisma/client";
 import {
@@ -39,6 +39,10 @@ import {
 import { Input } from "../../ui/input";
 import DeleteTransformationDialog from "../DeleteTransformationDialog";
 import TransformedImage from "../TransformedImage";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import OriginalImage from "../OriginalImage";
+import { v4 } from "uuid";
+import CompareTransformation from "../CompareTransformation";
 
 type GenerativeFillFormProps = {
   transformation: Transformation;
@@ -53,23 +57,23 @@ const formSchema = z.object({
 });
 
 const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
+  const [activeTab, setActiveTab] = useState<ActiveTab>("original-image");
+
   const [transformationURL, setTransformationURL] = useState<
     string | undefined
   >("");
 
   const [config, setConfig] = useState<TransformationConfig>({
-    aspectRatio: "",
-    title: "",
-    height: 0,
-    width: 0,
-    fillBackground: false,
+    aspectRatio: transformation.aspectRatio || "",
+    title: transformation.title || "",
+    height: transformation.transformed_height || transformation.original_height,
+    width: transformation.transformed_width || transformation.original_width,
+    fillBackground: transformation.fillBackground || false,
   });
 
-  const {
-    isPending,
-    execute: applyTransformation,
-    data,
-  } = useServerAction(applyTransformationAction);
+  const { isPending, execute: applyTransformation } = useServerAction(
+    applyTransformationAction
+  );
 
   const { isPending: isSaving, saveTransformation } =
     useSaveTransformation(transformation);
@@ -113,7 +117,7 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
             success: "Success! Loading your image...",
           }
         )
-        .then((value) => setTransformationURL(value[0]?.transformationURL));
+        .then((value) => setActiveTab("transformed-image"));
     }
   };
 
@@ -226,7 +230,6 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
                 className="w-full"
                 isLoading={isSaving}
                 icon={<IconDeviceFloppy size={15} />}
-                disabled={!transformationURL}
               >
                 Save
               </Button>
@@ -245,12 +248,37 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
           />
         </div>
       </div>
-      <div className="w-[80%] px-6 py-4 bg-background backdrop-blur-lg border border-secondary rounded-xl flex flex-col items-center justify-center">
-        <ScrollArea className="h-[90%]">
-          <TransformedImage
-            publicId={transformation.publicId}
-            config={config}
-          />
+      <div className="w-full px-6 py-4 bg-background backdrop-blur-lg border border-secondary rounded-xl flex flex-col items-center justify-center">
+        <ScrollArea className="h-[95%]">
+          <Tabs
+            value={activeTab}
+            onValueChange={(value) => setActiveTab(value as ActiveTab)}
+          >
+            <TabsList>
+              <TabsTrigger value="original-image">Original Image</TabsTrigger>
+              <TabsTrigger value="transformed-image">
+                Transformed Image
+              </TabsTrigger>
+              <TabsTrigger value="compare">Compare</TabsTrigger>
+            </TabsList>
+            <TabsContent className="w-full" value="original-image">
+              <OriginalImage transformation={transformation} />
+            </TabsContent>
+            <TabsContent className="w-full" value="transformed-image">
+              <TransformedImage
+                publicId={transformation.publicId}
+                config={config}
+                key={v4()}
+              />
+            </TabsContent>
+            <TabsContent className="w-full" value="compare">
+              <CompareTransformation
+                transformation={transformation}
+                config={config}
+                key={v4()}
+              />
+            </TabsContent>
+          </Tabs>
         </ScrollArea>
       </div>
     </div>

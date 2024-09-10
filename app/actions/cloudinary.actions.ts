@@ -133,15 +133,10 @@ export const saveTransformationAction = createServerAction()
 
     const transformationURL = getCldImageUrl({
       src: publicId,
-      fillBackground: true,
-      aspectRatio,
       height,
       width,
-      recolor: {
-        prompt: recolor?.prompt,
-        to: recolor?.to,
-        multiple: recolor?.multiple,
-      },
+      recolor,
+      ...config,
     });
 
     const transformation = await db.transformation.update({
@@ -152,11 +147,12 @@ export const saveTransformationAction = createServerAction()
         title,
         transformationType,
         transformationURL,
-        aspectRatio,
+        prompt: remove,
         aspect_ratio_key: aspect_ratio_key as string,
         transformed_height: height,
         transformed_width: width,
-        prompt: remove,
+        fillBackground: config.fillBackground,
+        aspectRatio: config.aspectRatio,
       },
     });
 

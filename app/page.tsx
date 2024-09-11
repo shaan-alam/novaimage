@@ -108,7 +108,7 @@ const Home = () => {
               <div className="relative rounded-xl shadow-2xl">
                 <BorderBeam />
                 <Image
-                  src="/images/demo-1.png"
+                  src="/images/demo.png"
                   alt="Demo"
                   width={1920}
                   height={960}

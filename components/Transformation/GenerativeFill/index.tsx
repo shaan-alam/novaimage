@@ -1,4 +1,5 @@
 "use client";
+
 import { applyTransformationAction } from "@/app/actions/cloudinary.actions";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -21,7 +22,6 @@ import {
   IconPaintFilled,
   IconSparkles,
 } from "@tabler/icons-react";
-import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -55,7 +55,9 @@ const formSchema = z.object({
   aspect_ratio_key: z.string(),
 });
 
-const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
+export default function GenerativeFillForm({
+  transformation,
+}: GenerativeFillFormProps) {
   const [activeTab, setActiveTab] = useState<ActiveTab>("original-image");
 
   const [config, setConfig] = useState<TransformationConfig>({
@@ -145,18 +147,21 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
   };
 
   return (
-    <div className="flex gap-x-2 h-full">
-      <div className="flex flex-col w-[20%] bg-background px-6 py-4 border border-secondary rounded-xl">
-        <h1 className="flex items-center text-primary font-semibold text-xl mt-7">
-          <IconSparkles />
-          &nbsp; Generative Fill
+    <div className="flex flex-col lg:flex-row gap-4 h-screen">
+      <div className="w-full lg:w-1/4 bg-background p-4 border border-secondary rounded-xl">
+        <h1 className="flex items-center text-primary font-semibold text-xl mb-4 mt-8 md:mt-2">
+          <IconSparkles className="mr-2" />
+          Generative Fill
         </h1>
-        <p className="mt-4 leading-6 text-sm text-muted-foreground">
+        <p className="mb-6 text-sm text-muted-foreground">
           Transform your images effortlessly with our AI-powered generative fill
           feature, adding or removing elements with ease. 🚀
         </p>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSaveTransformation)}>
+          <form
+            onSubmit={form.handleSubmit(onSaveTransformation)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="title"
@@ -178,7 +183,7 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
                   value={field.value}
                   onValueChange={(value) => onSelectChange(value, field)}
                 >
-                  <SelectTrigger className="w-full my-4">
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Aspect Ratio" />
                   </SelectTrigger>
                   <SelectContent>
@@ -202,69 +207,70 @@ const GenerativeFillForm = ({ transformation }: GenerativeFillFormProps) => {
                 </Select>
               )}
             />
-            <div className="mt-6 flex items-center space-x-4">
+            <div className="flex flex-col sm:flex-row gap-2">
               <Button
                 type="button"
                 isLoading={isPending}
                 className="w-full"
                 disabled={!form.getValues().aspectRatio}
-                icon={<IconPaintFilled size={15} />}
                 onClick={onApplyTransformation}
               >
+                <IconPaintFilled size={15} className="mr-2" />
                 Apply
               </Button>
               <Button
                 variant="secondary"
                 className="w-full"
                 isLoading={isSaving}
-                icon={<IconDeviceFloppy size={15} />}
               >
+                <IconDeviceFloppy size={15} className="mr-2" />
                 Save
               </Button>
             </div>
           </form>
         </Form>
         {transformation && (
-          <ExportTransformation
-            publicId={transformation.publicId}
-            config={config}
-          />
+          <div className="mt-4">
+            <ExportTransformation
+              publicId={transformation.publicId}
+              config={config}
+            />
+          </div>
         )}
-        <div className="mt-auto">
+        <div className="mt-4">
           <DeleteTransformationDialog
             transformationId={transformation?.id as string}
           />
         </div>
       </div>
-      <div className="w-full px-6 py-4 bg-background backdrop-blur-lg border border-secondary rounded-xl flex flex-col items-center justify-center">
-        <ScrollArea className="h-[95%]">
-          <Tabs
-            value={activeTab}
-            onValueChange={(value) => setActiveTab(value as ActiveTab)}
-          >
-            <TabsList className="w-full">
-              <TabsTrigger className="w-full" value="original-image">
-                Original Image
-              </TabsTrigger>
-              <TabsTrigger className="w-full" value="transformed-image">
-                Transformed Image
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent className="w-full" value="original-image">
+      <div className="w-full lg:w-3/4 bg-background border border-secondary rounded-xl flex flex-col p-3">
+        <Tabs
+          value={activeTab}
+          onValueChange={(value) => setActiveTab(value as ActiveTab)}
+          className="w-full"
+        >
+          <TabsList className="w-full">
+            <TabsTrigger className="w-1/2" value="original-image">
+              Original Image
+            </TabsTrigger>
+            <TabsTrigger className="w-1/2" value="transformed-image">
+              Transformed Image
+            </TabsTrigger>
+          </TabsList>
+          <ScrollArea className="h-[calc(100vh-12rem)] p-4">
+            <TabsContent value="original-image">
               <OriginalImage transformation={transformation} />
             </TabsContent>
-            <TabsContent className="w-full" value="transformed-image">
+            <TabsContent value="transformed-image">
               <TransformedImage
                 publicId={transformation.publicId}
                 config={config}
                 key={v4()}
               />
             </TabsContent>
-          </Tabs>
-        </ScrollArea>
+          </ScrollArea>
+        </Tabs>
       </div>
     </div>
   );
-};
-
-export default GenerativeFillForm;
+}

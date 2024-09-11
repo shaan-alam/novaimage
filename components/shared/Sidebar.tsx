@@ -13,9 +13,10 @@ import {
   IconCameraCancel,
   IconChevronDown,
   IconColorFilter,
+  IconLayoutGrid,
   IconPhotoEdit,
   IconSparkles,
-  IconUser
+  IconUser,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -53,6 +54,18 @@ export default function Sidebar({ user }: { user: User }) {
             />
           </div>
           <nav className="flex-1 overflow-y-auto mt-5">
+            <Link href='/dashboard'>
+              <Button
+                variant="ghost"
+                className="w-full justify-start px-1 h-9 text-sm hover:bg-primary hover:text-primary-foreground text-primary/80"
+              >
+                <span className="flex items-center">
+                  <IconLayoutGrid className="w-5 h-5 mr-2" />
+                  Dashboard
+                </span>
+              </Button>
+            </Link>
+
             <Collapsible open={openAITools} onOpenChange={setOpenAITools}>
               <CollapsibleTrigger asChild>
                 <Button

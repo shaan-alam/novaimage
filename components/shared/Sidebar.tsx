@@ -1,115 +1,131 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import {
-  SidebarBody,
-  SidebarLink,
-  Sidebar as SidebarUI,
-} from "@/components/ui/sidebar-ui";
-import { SIDEBAR_LINKS } from "@/constants";
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { SidebarBody, Sidebar as SidebarUI } from "@/components/ui/sidebar-ui";
 import { cn } from "@/lib/utils";
 import { UserButton } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
-import { Theme } from "@clerk/types";
 import { User } from "@prisma/client";
-import { IconCoin } from "@tabler/icons-react";
-import Image from "next/image";
+import {
+  IconCameraCancel,
+  IconChevronDown,
+  IconColorFilter,
+  IconPhotoEdit,
+  IconSparkles,
+  IconUser
+} from "@tabler/icons-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useState } from "react";
+import ThemeToggler from "./ThemeToggler";
 
-const Sidebar = ({ user }: { user: User }) => {
-  const pathname = usePathname();
-
-  const [open, setOpen] = useState(false);
+export default function Sidebar({ user }: { user: User }) {
+  const [openAITools, setOpenAITools] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <SidebarUI open={open} setOpen={setOpen}>
-      <SidebarBody className="relative">
-        <div className="h-screen flex flex-col">
-          <div className="my-6 flex items-center space-x-2">
-            <Image
-              src="/images/logo.png"
-              alt="Artsy logo"
-              height={100}
-              width={100}
-              className={cn(
-                "object-cover transition-all",
-                !open ? "h-[30px] w-[30px]" : "h-[50px] w-[50px]"
-              )}
-            />
-            <h1
-              className={cn(
-                "font-bold text-2xl transition-all",
-                open ? "opacity-100" : "opacity-0"
-              )}
-            >
-              Nova Image
-            </h1>
+    <SidebarUI open={sidebarOpen} setOpen={setSidebarOpen}>
+      <SidebarBody>
+        <aside className="flex h-screen flex-col bg-zinc-1000 dark:bg-zinc-900 text-primary p-2 relative z-20 w-[300px]">
+          <div className="background">
+            <div className="gradient bg-gradient-to-br from-[#efdb0a] to-[#e420ef] w-[80%] pt-[30%] left-[20%] top-[20%] transform -translate-x-1/2 -translate-y-1/2"></div>
+            <div className="gradient bg-gradient-to-br from-[#ff7800] to-[#1c71d8] w-[50%] pt-[40%] left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+            <div className="gradient bg-gradient-to-br from-[#c061cb] to-[#e01b24] w-[35%] pt-[30%] left-[80%] top-[80%] transform -translate-x-1/2 -translate-y-1/2"></div>
+            <div className="gradient bg-gradient-to-br from-[#c061cb] to-[#e01b24] w-[50%] pt-[30%] right-[80%] top-[80%] transform translate-x-1/2 -translate-y-1/2"></div>
           </div>
-          <div>
-            <ul>
-              {SIDEBAR_LINKS.map((item) => {
-                const isActive = pathname.includes(item.href);
-
-                return (
-                  <SidebarLink
-                    link={item}
-                    key={item.href}
-                    className="my-4"
-                    isActive={isActive}
-                  />
-                );
-              })}
-            </ul>
-          </div>
-          <div className="mt-auto">
-            <Link
-              href=".buy-credits"
-              className={cn(
-                "text-secondary-foreground hover:text-primary-foreground text-sm mb-6 hover:bg-primary rounded-xl",
-                open ? "flex items-center space-x-2 p-2" : "block"
-              )}
-            >
-              <IconCoin
-                color="gold"
-                className={cn("h-[20px] w-[20px] rounded-full")}
-              />
-              <p
-                className={cn(
-                  "transition-all",
-                  open ? "opacity-100" : "opacity-0"
-                )}
-              >
-                Buy Credits
-              </p>
-            </Link>
-            <div className="flex items-center space-x-2 justify-between">
-              <div className="flex items-center space-x-2">
-                <UserButton appearance={dark as Theme} />
-                <p
-                  className={cn(
-                    "text-primary font-medium",
-                    open ? "block" : "hidden"
-                  )}
-                >
-                  {user?.first_name} {user?.last_name}
-                </p>
-              </div>
-              <div className="flex items-center space-x-1">
-                <p
-                  className={cn(
-                    "text-gray-400 text-xs transition-all duration-500",
-                    open ? "block" : "hidden"
-                  )}
-                >
-                  10 Credits
-                </p>
-              </div>
+          <div className="flex items-center justify-between p-2">
+            <div className="flex items-center justify-between space-x-2">
+              <UserButton />
+              <span className="text-sm font-medium">{user.username}</span>
             </div>
+            <ThemeToggler />
           </div>
-        </div>
+          <div className="flex items-center space-x-2 px-2 py-1">
+            <div className="w-4 h-4 bg-zinc-700 rounded-sm flex items-center justify-center">
+              <span className="text-[10px]">SH</span>
+            </div>
+            <input
+              type="text"
+              placeholder="Search"
+              className="bg-transparent text-sm w-full focus:outline-none"
+            />
+          </div>
+          <nav className="flex-1 overflow-y-auto mt-5">
+            <Collapsible open={openAITools} onOpenChange={setOpenAITools}>
+              <CollapsibleTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start px-1 h-9 text-sm hover:bg-primary hover:text-primary-foreground text-primary/80"
+                >
+                  <span className="flex items-center">
+                    <IconSparkles className="w-5 h-5 mr-2" />
+                    AI Tools
+                  </span>
+                  <IconChevronDown
+                    className={cn(
+                      "w-3 h-3 transition-transform duration-200 ml-2",
+                      openAITools ? "transform rotate-180" : ""
+                    )}
+                  />
+                </Button>
+              </CollapsibleTrigger>
+              <CollapsibleContent className="space-y-1 ml-4">
+                <div className="animate-collapsible">
+                  <Link href="/generative-fill">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full justify-start px-1 h-9 text-sm hover:bg-primary hover:text-primary-foreground text-primary/80"
+                    >
+                      <IconPhotoEdit className="w-5 h-5 mr-2" />
+                      AI Generative Fill
+                    </Button>
+                  </Link>
+                </div>
+                <div className="animate-collapsible">
+                  <Link href="/generative-recolor">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full justify-start px-1 h-9 text-sm hover:bg-primary hover:text-primary-foreground text-primary/80"
+                    >
+                      <IconColorFilter className="w-5 h-5 mr-2" />
+                      AI Generative Recolor
+                    </Button>
+                  </Link>
+                </div>
+                <div className="animate-collapsible">
+                  <Link href="/object-removal">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full justify-start px-1 h-9 text-sm hover:bg-primary hover:text-primary-foreground text-primary/80"
+                    >
+                      <IconCameraCancel className="w-5 h-5 mr-2" />
+                      AI Object Removal
+                    </Button>
+                  </Link>
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+            <ul>
+              <li className="mt-2">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start px-1 h-9 text-sm hover:bg-primary hover:text-primary-foreground text-primary/80"
+                >
+                  <span className="flex items-center">
+                    <IconUser className="w-5 h-5 mr-2" />
+                    Billing
+                  </span>
+                </Button>
+              </li>
+            </ul>
+          </nav>
+        </aside>
       </SidebarBody>
     </SidebarUI>
   );
-};
-
-export default Sidebar;
+}

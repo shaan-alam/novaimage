@@ -91,19 +91,13 @@ export const DesktopSidebar = ({
   children,
   ...props
 }: React.ComponentProps<typeof motion.div>) => {
-  const { open, setOpen, animate } = useSidebar();
   return (
-    <div className="mr-2 ml-1 relative">
+    <div className="mr-2 relative hidden md:block">
       <motion.div
         className={cn(
-          "h-full px-4 py-4 hidden rounded-xl  md:flex md:flex-col bg-background border border-border  w-[300px] flex-shrink-0",
+          "h-full hidden rounded-xl md:flex md:flex-col bg-background flex-shrink-0 border border-border",
           className
         )}
-        animate={{
-          width: animate ? (open ? "300px" : "60px") : "300px",
-        }}
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
         {...props}
       >
         {children}
@@ -122,13 +116,13 @@ export const MobileSidebar = ({
     <>
       <div
         className={cn(
-          "h-10 px-4 py-4 flex flex-row md:hidden  items-center justify-between bg-neutral-100 dark:bg-neutral-800 fixed top-0 w-full z-30"
+          "h-10 flex flex-row md:hidden  items-center justify-between bg-primary fixed top-0 w-full z-30"
         )}
         {...props}
       >
         <div className="flex justify-end z-20 w-full">
           <IconMenu2
-            className="text-neutral-800 dark:text-neutral-200 cursor-pointer"
+            className="text-primary-foreground cursor-pointer"
             onClick={() => setOpen(!open)}
           />
         </div>
@@ -143,12 +137,12 @@ export const MobileSidebar = ({
                 ease: "easeInOut",
               }}
               className={cn(
-                "fixed h-full w-full inset-0 bg-white dark:bg-neutral-900 p-10 z-[100] flex flex-col justify-between",
+                "fixed h-screen w-full inset-0 bg-white dark:bg-neutral-900 py-10 z-[100] flex flex-col justify-between border border-border",
                 className
               )}
             >
               <div
-                className="absolute right-10 top-10 z-50 text-neutral-800 dark:text-neutral-200"
+                className="absolute right-4 top-2 z-50 text-neutral-800 dark:text-neutral-200 cursor-pointer"
                 onClick={() => setOpen(!open)}
               >
                 <IconX />
@@ -180,13 +174,18 @@ export const SidebarLink = ({
       className={cn(
         "flex items-center justify-start gap-2  group/sidebar",
         open && "p-2",
-        isActive ? "bg-primary rounded-xl text-primary-foreground" : "text-primary",
+        isActive
+          ? "bg-primary rounded-xl text-primary-foreground"
+          : "text-primary",
         className
       )}
       {...props}
     >
       <link.icon
-        className={cn("h-[30px] w-[30px] rounded-full p-1", isActive ? "text-primary-foreground": "text-primary")}
+        className={cn(
+          "h-[30px] w-[30px] rounded-full p-1",
+          isActive ? "text-primary-foreground" : "text-primary"
+        )}
       />
 
       <motion.span

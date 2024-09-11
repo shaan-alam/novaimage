@@ -43,18 +43,8 @@ export default function Sidebar({ user }: { user: User }) {
             </div>
             <ThemeToggler />
           </div>
-          <div className="flex items-center space-x-2 px-2 py-1">
-            <div className="w-4 h-4 bg-zinc-700 rounded-sm flex items-center justify-center">
-              <span className="text-[10px]">SH</span>
-            </div>
-            <input
-              type="text"
-              placeholder="Search"
-              className="bg-transparent text-sm w-full focus:outline-none"
-            />
-          </div>
           <nav className="flex-1 overflow-y-auto mt-5">
-            <Link href='/dashboard'>
+            <Link href="/dashboard">
               <Button
                 variant="ghost"
                 className="w-full justify-start px-1 h-9 text-sm hover:bg-primary hover:text-primary-foreground text-primary/80"

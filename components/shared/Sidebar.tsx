@@ -29,7 +29,7 @@ export default function Sidebar({ user }: { user: User }) {
   return (
     <SidebarUI open={sidebarOpen} setOpen={setSidebarOpen}>
       <SidebarBody>
-        <aside className="flex h-screen flex-col bg-zinc-1000 dark:bg-zinc-900 text-primary p-2 relative z-20 w-[300px]">
+        <aside className="flex h-screen flex-col bg-zinc-1000 dark:bg-zinc-900 text-primary p-2 relative z-20 w-full md:w-[300px]">
           <div className="background">
             <div className="gradient bg-gradient-to-br from-[#efdb0a] to-[#e420ef] w-[80%] pt-[30%] left-[20%] top-[20%] transform -translate-x-1/2 -translate-y-1/2"></div>
             <div className="gradient bg-gradient-to-br from-[#ff7800] to-[#1c71d8] w-[50%] pt-[40%] left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>

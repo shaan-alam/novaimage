@@ -1,3 +1,5 @@
+import Image from "next/image";
+import MyTransformations from "@/components/Dashboard/MyTransformations";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,68 +11,80 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 
-const Dashboard = () => {
+export default function Dashboard() {
+  const aiTools = [
+    {
+      title: "AI Generative Image",
+      description:
+        "Automatically fill in missing parts of your images with realistic and creative results.",
+      image: "/images/generative-fill-demo.png",
+      link: "/generative-fill",
+    },
+    {
+      title: "AI Generative Recolor",
+      description:
+        "Recolor your images with a single click. Change colors to match your brand or create new moods.",
+      image: "/images/generative-recolor-demo.png",
+      link: "/generative-recolor",
+    },
+    {
+      title: "AI Object Removal",
+      description:
+        "Remove unwanted objects from your photos seamlessly. No more photobombs or distracting elements!",
+      image: "/images/object-removal-demo.png",
+      link: "/object-removal",
+    },
+  ];
+
   return (
-    <section className="h-full w-full flex items-center p-12">
-      <Tabs defaultValue="ai-tools">
-        <TabsList>
+    <section className="w-full h-screen py-24 px-4 sm:p-12 bg-gradient-to-b from-background to-secondary/20">
+      <Tabs defaultValue="ai-tools" className="w-full max-w-5xl mx-auto">
+        <TabsList className="mb-8 justify-center">
           <TabsTrigger value="ai-tools">AI Tools</TabsTrigger>
-          <TabsTrigger value="your-transformations">
+          <TabsTrigger value="my-transformations">
             Your Transformations
           </TabsTrigger>
         </TabsList>
         <TabsContent value="ai-tools">
-          <div className="grid grid-cols-3 gap-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>AI Generative Image</CardTitle>
-                <CardDescription>
-                  Automatically fill in missing parts of your images with
-                  realistic and creative results. Say goodbye to incomplete
-                  photos!
-                </CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <Link href="/generative-fill">
-                  <Button>Use</Button>
-                </Link>
-              </CardFooter>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>AI Generative Recolor</CardTitle>
-                <CardDescription>
-                  Recolor your images with a single click. Change colors to
-                  match your brand or create entirely new moods.
-                </CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <Link href="/generative-recolor">
-                  <Button>Use</Button>
-                </Link>
-              </CardFooter>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>AI Object Removal</CardTitle>
-                <CardDescription>
-                  Remove unwanted objects from your photos seamlessly. No more
-                  photobombs or distracting elements!
-                </CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <Link href="/object-removal">
-                  <Button>Use</Button>
-                </Link>
-              </CardFooter>
-            </Card>
-            <p className="text-muted-foreground text-sm">More coming soon!!</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            {aiTools.map((tool, index) => (
+              <Card
+                key={index}
+                className="flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+              >
+                <div className="relative aspect-square">
+                  <Image
+                    src={tool.image}
+                    alt={tool.title}
+                    layout="fill"
+                    objectFit="cover"
+                    className="transition-transform duration-300 hover:scale-105"
+                  />
+                </div>
+                <div className="flex flex-col justify-between flex-grow p-6">
+                  <CardHeader className="p-0">
+                    <CardTitle className="text-2xl mb-2">
+                      {tool.title}
+                    </CardTitle>
+                    <CardDescription>{tool.description}</CardDescription>
+                  </CardHeader>
+                  <CardFooter className="p-0 pt-4">
+                    <Link href={tool.link} className="w-full">
+                      <Button className="w-full">Use Tool</Button>
+                    </Link>
+                  </CardFooter>
+                </div>
+              </Card>
+            ))}
           </div>
+          <p className="text-muted-foreground text-sm mt-8 text-center">
+            More AI tools coming soon!
+          </p>
         </TabsContent>
-        <TabsContent value="password">Change your password here.</TabsContent>
+        <TabsContent value="my-transformations">
+          <MyTransformations />
+        </TabsContent>
       </Tabs>
     </section>
   );
-};
-
-export default Dashboard;
+}

@@ -283,7 +283,7 @@ export const features: Feature[] = [
     ),
   },
   {
-    title: "AI Object Removal (Coming soon)",
+    title: "AI Object Removal",
     description:
       "Remove unwanted objects from your photos seamlessly. No more photobombs or distracting elements!",
     content: (

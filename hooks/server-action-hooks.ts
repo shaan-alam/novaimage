@@ -6,6 +6,7 @@ import {
 
 export const QueryKeyFactory = createServerActionsKeyFactory({
   getTransformation: (id: string) => ["get-transformation", id],
+  fetchMyTransformations: () => ['fetch-my-transformations']
 });
 
 const {
@@ -24,5 +25,6 @@ const {
 export {
   useServerActionInfiniteQuery,
   useServerActionMutation,
-  useServerActionQuery,
+  useServerActionQuery
 };
+

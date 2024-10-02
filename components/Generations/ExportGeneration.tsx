@@ -6,10 +6,10 @@ import { v4 } from "uuid";
 
 type ExportGenerationProps = {
   url: string;
-  onCard: boolean;
+  onCard?: boolean;
 };
 
-const ExportGeneration = ({ url, onCard }: ExportGenerationProps) => {
+const ExportGeneration = ({ url, onCard = false }: ExportGenerationProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const exportImage = async (imageUrl: string) => {

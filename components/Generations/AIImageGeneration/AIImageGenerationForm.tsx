@@ -275,7 +275,7 @@ export default function ImageGenerator() {
             </Button>
           </form>
         </Form>
-        {data && <ExportGeneration url={data.imageUrl} />}
+        {data && <ExportGeneration url={data.imageUrl} onCard />}
         {/* {data && (
           <div className="mt-4">
             <ExportTransformation

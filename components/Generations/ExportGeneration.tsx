@@ -6,9 +6,10 @@ import { v4 } from "uuid";
 
 type ExportGenerationProps = {
   url: string;
+  onCard: boolean;
 };
 
-const ExportGeneration = ({ url }: ExportGenerationProps) => {
+const ExportGeneration = ({ url, onCard }: ExportGenerationProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const exportImage = async (imageUrl: string) => {
@@ -26,7 +27,7 @@ const ExportGeneration = ({ url }: ExportGenerationProps) => {
 
       const anchor = document.createElement("a");
       anchor.href = blobUrl;
-      anchor.download = `${v4()}.png`
+      anchor.download = `${v4()}.png`;
 
       anchor.click();
 
@@ -37,17 +38,19 @@ const ExportGeneration = ({ url }: ExportGenerationProps) => {
     }
   };
 
-  return (
-    <div>
-      <Button
-        icon={<IconDownload className="mr-2 h-4 w-4" />}
-        className="w-full mt-2"
-        onClick={() => exportImage(url)}
-        isLoading={isLoading}
-      >
-        Export
-      </Button>
-    </div>
+  return !onCard ? (
+    <Button
+      icon={<IconDownload className="mr-2 h-4 w-4" />}
+      className="w-full mt-2"
+      onClick={() => exportImage(url)}
+      isLoading={isLoading}
+    >
+      Export
+    </Button>
+  ) : (
+    <span className="text-white text-sm" onClick={() => exportImage(url)}>
+      Export
+    </span>
   );
 };
 

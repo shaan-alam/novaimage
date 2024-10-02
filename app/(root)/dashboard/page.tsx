@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
+import MyImageGenerations from "@/components/Dashboard/MyImageGenerations";
 
 export default function Dashboard() {
   const aiTools = [
@@ -43,6 +44,9 @@ export default function Dashboard() {
           <TabsTrigger value="ai-tools">AI Tools</TabsTrigger>
           <TabsTrigger value="my-transformations">
             Your Transformations
+          </TabsTrigger>
+          <TabsTrigger value="my-image-generations">
+            Your Image Generations
           </TabsTrigger>
         </TabsList>
         <TabsContent value="ai-tools">
@@ -83,6 +87,9 @@ export default function Dashboard() {
         </TabsContent>
         <TabsContent value="my-transformations">
           <MyTransformations />
+        </TabsContent>
+        <TabsContent value="my-image-generations">
+          <MyImageGenerations />
         </TabsContent>
       </Tabs>
     </section>

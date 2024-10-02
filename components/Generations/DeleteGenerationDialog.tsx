@@ -15,6 +15,8 @@ import toast from "react-hot-toast";
 import { useServerAction } from "zsa-react";
 import { Button } from "../ui/button";
 import { deleteGeneratedImage } from "@/app/actions/image-gen.actions";
+import { useQueryClient } from "@tanstack/react-query";
+import { QueryKeyFactory } from "@/hooks/server-action-hooks";
 
 type DeleteGenerationDialogProps = {
   generationId: string;
@@ -23,6 +25,7 @@ type DeleteGenerationDialogProps = {
 const DeleteGenerationDialog = ({
   generationId,
 }: DeleteGenerationDialogProps) => {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const { isPending, execute } = useServerAction(deleteGeneratedImage);
 
@@ -30,6 +33,9 @@ const DeleteGenerationDialog = ({
     toast.promise(execute({ generationId }), {
       loading: "Deleting...",
       success: (result) => {
+        queryClient.refetchQueries({
+          queryKey: QueryKeyFactory.fetchMyImageGenerations(),
+        });
         router.push("/dashboard");
         return <div>{result[0]?.message}</div>;
       },
@@ -41,15 +47,8 @@ const DeleteGenerationDialog = ({
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger className="w-full" asChild>
-        <Button
-          type="button"
-          variant="secondary"
-          className="w-full"
-          icon={<IconTrash size={15} />}
-        >
-          Delete
-        </Button>
+      <AlertDialogTrigger className="text-white text-sm">
+        Delete
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

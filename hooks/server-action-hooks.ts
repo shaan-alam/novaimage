@@ -6,7 +6,8 @@ import {
 
 export const QueryKeyFactory = createServerActionsKeyFactory({
   getTransformation: (id: string) => ["get-transformation", id],
-  fetchMyTransformations: () => ['fetch-my-transformations']
+  fetchMyTransformations: () => ['fetch-my-transformations'],
+  fetchMyImageGenerations: () => ['fetch-my-image-generations']
 });
 
 const {

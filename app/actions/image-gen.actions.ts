@@ -95,3 +95,34 @@ export const deleteGeneratedImage = createServerAction()
 
     return { message: "Deleted your Generation successfully!" };
   });
+
+export const fetchUsersImageGenerations = createServerAction()
+  .input(
+    z.object({
+      userId: z.string(),
+    })
+  )
+  .handler(async () => {
+    const { userId } = auth();
+
+    if (!userId) {
+      throw new ZSAError("NOT_AUTHORIZED");
+    }
+
+    const user = await getUserByClerkId(userId);
+
+    if (!user) {
+      throw new ZSAError("NOT_FOUND");
+    }
+
+    const imageGenerations = await db.generation.findMany({
+      where: {
+        userId: user?.id,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return imageGenerations;
+  });

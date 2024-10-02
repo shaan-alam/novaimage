@@ -55,19 +55,21 @@ model Transformation {
 }
 
 model Generation {
-  id       String  @id @default(cuid())
-  imageUrl String
-  height   Int
-  width    Int
-  prompt   String
-  model    String
-  seed     Int
-  nologo   Boolean
-  private  Boolean
-  enhance  Boolean
-  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId   String
+  id        String   @id @default(cuid())
+  imageUrl  String
+  height    Int
+  width     Int
+  prompt    String
+  model     String
+  seed      Int
+  nologo    Boolean
+  private   Boolean
+  enhance   Boolean
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
 }
+
 
 model Recolor {
   id               String         @id @default(cuid())

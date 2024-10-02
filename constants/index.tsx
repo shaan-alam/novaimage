@@ -260,7 +260,7 @@ export const features: Feature[] = [
       "Automatically fill in missing parts of your images with realistic and creative results. Say goodbye to incomplete photos!",
     content: (
       <Image
-        src="/images/demo.png"
+        src="/images/generative-fill-demo.png"
         width={1920}
         height={640}
         alt="Demo"
@@ -269,12 +269,12 @@ export const features: Feature[] = [
     ),
   },
   {
-    title: "AI Recolor (Coming soon)",
+    title: "AI Recolor",
     description:
       "Recolor your images with a single click. Change colors to match your brand or create entirely new moods.",
     content: (
       <Image
-        src="/images/demo.png"
+        src="/images/generative-recolor-demo.png"
         width={1920}
         height={640}
         alt="Demo"
@@ -288,7 +288,7 @@ export const features: Feature[] = [
       "Remove unwanted objects from your photos seamlessly. No more photobombs or distracting elements!",
     content: (
       <Image
-        src="/images/demo.png"
+        src="/images/object-removal-demo.png"
         width={1920}
         height={640}
         alt="Demo"
@@ -297,12 +297,12 @@ export const features: Feature[] = [
     ),
   },
   {
-    title: "AI Image Generation (Coming soon)",
+    title: "AI Image Generation",
     description:
       "Generate stunning images from scratch with the power of AI. Perfect for when you need a unique visual in seconds.",
     content: (
       <Image
-        src="/images/demo.png"
+        src="/images/image-gen-demo.png"
         width={1920}
         height={640}
         alt="Demo"
@@ -311,17 +311,13 @@ export const features: Feature[] = [
     ),
   },
   {
-    title: "AI Background Removal (Coming soon)",
+    title: "AI Background Removal (Coming Soon)",
     description:
       "Instantly remove backgrounds to isolate your subject. Ideal for creating professional product images or unique portraits.",
     content: (
-      <Image
-        src="/images/demo.png"
-        width={1920}
-        height={640}
-        alt="Demo"
-        className="shadow-background shadow-2xl rounded-2xl"
-      />
+      <div className="flex items-center justify-center h-full">
+        <h1 className="text-3xl font-bold">Coming Soon!</h1>
+      </div>
     ),
   },
   {

@@ -5,7 +5,6 @@ import {
   generateRandomPrompt,
 } from "@/app/actions/image-gen.actions";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Collapsible,
   CollapsibleContent,
@@ -14,11 +13,10 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
@@ -29,32 +27,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  IconArrowsRandom,
-  IconArrowsShuffle,
   IconChevronDown,
   IconChevronUp,
   IconLoader2,
-  IconSparkles,
-  IconWand,
+  IconSparkles
 } from "@tabler/icons-react";
 import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useServerAction } from "zsa-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import RandomPromptButton from "./RandomPromptButton";
-import DeleteGenerationDialog from "../DeleteGenerationDialog";
 import ExportGeneration from "../ExportGeneration";
-import { Textarea } from "@/components/ui/textarea";
+import RandomPromptButton from "./RandomPromptButton";
 
 const formSchema = z.object({
   prompt: z.string().min(1, "Prompt is required"),
@@ -276,19 +263,6 @@ export default function ImageGenerator() {
           </form>
         </Form>
         {data && <ExportGeneration url={data.imageUrl} onCard />}
-        {/* {data && (
-          <div className="mt-4">
-            <ExportTransformation
-              publicId={transformation.publicId}
-              config={config}
-            />
-          </div>
-        )} */}
-        {/* <div className="mt-4">
-          <DeleteTransformationDialog
-            transformationId={transformation?.id as string}
-          />
-          </div> */}
       </div>
       <div className="w-full lg:w-3/4 bg-background border border-secondary rounded-xl flex flex-col p-3 items-center justify-center">
         {isLoading && (

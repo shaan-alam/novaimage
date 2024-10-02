@@ -125,7 +125,7 @@ export default function Sidebar({ user }: { user: User }) {
                 </div>
               </CollapsibleContent>
             </Collapsible>
-            <ul>
+            {/* <ul>
               <li className="mt-2">
                 <Button
                   variant="ghost"
@@ -137,7 +137,7 @@ export default function Sidebar({ user }: { user: User }) {
                   </span>
                 </Button>
               </li>
-            </ul>
+            </ul> */}
           </nav>
         </aside>
       </SidebarBody>

@@ -2,10 +2,9 @@
 
 import { fetchMyTransformations } from "@/app/actions/transformation.action";
 import { useServerActionQuery } from "@/hooks/server-action-hooks";
+import { useSession } from "@clerk/nextjs";
 import { IconLoader2 } from "@tabler/icons-react";
 import TransformationCard from "../Transformation/TransformationCard";
-import { ScrollArea } from "../ui/scroll-area";
-import { useSession } from "@clerk/nextjs";
 
 export default function MyTransformations() {
   const { session } = useSession();
@@ -19,7 +18,7 @@ export default function MyTransformations() {
   });
 
   return (
-    <ScrollArea className="h-[calc(100vh-4rem)] px-4 py-6">
+    <div>
       {isLoading && (
         <div className="flex items-center justify-center space-x-2 py-4">
           <IconLoader2 className="animate-spin" />
@@ -34,9 +33,12 @@ export default function MyTransformations() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
         {data &&
           data.map((transformation) => (
-            <TransformationCard key={transformation.id} transformation={transformation} />
+            <TransformationCard
+              key={transformation.id}
+              transformation={transformation}
+            />
           ))}
       </div>
-    </ScrollArea>
+    </div>
   );
 }

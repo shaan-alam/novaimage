@@ -1,11 +1,9 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
-import { Generation, Recolor, Transformation } from "@prisma/client";
-import { CldImage } from "next-cloudinary";
-import Image from "next/image";
-import Link from "next/link";
+import { Generation } from "@prisma/client";
 import { motion, useInView } from "framer-motion";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import DeleteGenerationDialog from "./DeleteGenerationDialog";
 import ExportGeneration from "./ExportGeneration";
 

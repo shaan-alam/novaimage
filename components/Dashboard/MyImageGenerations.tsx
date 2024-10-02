@@ -5,7 +5,6 @@ import { useServerActionQuery } from "@/hooks/server-action-hooks";
 import { useSession } from "@clerk/nextjs";
 import { IconLoader2 } from "@tabler/icons-react";
 import ImageGenerationCard from "../Generations/ImageGenerationCard";
-import { ScrollArea } from "../ui/scroll-area";
 
 const MyImageGenerations = () => {
   const { session } = useSession();
@@ -19,7 +18,7 @@ const MyImageGenerations = () => {
   });
 
   return (
-    <ScrollArea className="h-[calc(100vh-4rem)] px-4 py-6">
+    <div>
       {isLoading && (
         <div className="flex items-center justify-center space-x-2 py-4">
           <IconLoader2 className="animate-spin" />
@@ -37,7 +36,7 @@ const MyImageGenerations = () => {
             <ImageGenerationCard key={generation.id} generation={generation} />
           ))}
       </div>
-    </ScrollArea>
+    </div>
   );
 };
 

@@ -14,19 +14,20 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useServerAction } from "zsa-react";
 import { Button } from "../ui/button";
+import { deleteGeneratedImage } from "@/app/actions/image-gen.actions";
 
-type DeleteTransformationProps = {
-  transformationId: string;
+type DeleteGenerationDialogProps = {
+  generationId: string;
 };
 
-const DeleteTransformationDialog = ({
-  transformationId,
-}: DeleteTransformationProps) => {
+const DeleteGenerationDialog = ({
+  generationId,
+}: DeleteGenerationDialogProps) => {
   const router = useRouter();
-  const { isPending, execute } = useServerAction(deleteTransformation);
+  const { isPending, execute } = useServerAction(deleteGeneratedImage);
 
   const deleteImageHandler = async () => {
-    toast.promise(execute({ id: transformationId }), {
+    toast.promise(execute({ generationId }), {
       loading: "Deleting...",
       success: (result) => {
         router.push("/dashboard");
@@ -75,4 +76,4 @@ const DeleteTransformationDialog = ({
   );
 };
 
-export default DeleteTransformationDialog;
+export default DeleteGenerationDialog;

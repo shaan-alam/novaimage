@@ -24,6 +24,7 @@ model User {
   credits    Decimal @default(10)
 
   transformations Transformation[]
+  generations     Generation[]
 }
 
 enum TRANSFORMATION_TYPE {
@@ -51,6 +52,21 @@ model Transformation {
   userId             String
   aspect_ratio_key   String
   recolor            Recolor?
+}
+
+model Generation {
+  id       String  @id @default(cuid())
+  imageUrl String
+  height   Int
+  width    Int
+  prompt   String
+  model    String
+  seed     Int
+  nologo   Boolean
+  private  Boolean
+  enhance  Boolean
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String
 }
 
 model Recolor {

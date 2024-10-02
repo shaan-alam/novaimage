@@ -52,7 +52,7 @@ const AnimatedHeading = ({ children, className }: any) => {
 
 const Home = () => {
   return (
-    <>
+    <div>
       <Navbar />
       <main className="overflow-hidden">
         <section className="min-h-screen relative z-40">
@@ -223,7 +223,7 @@ const Home = () => {
           </div>
         </section>
 
-        <section className="pt-20 sm:pt-32 lg:pt-40 bg-background relative">
+        {/* <section className="pt-20 sm:pt-32 lg:pt-40 bg-background relative">
           <div className="background">
             <div className="gradient bg-gradient-to-br from-[#efdb0a] to-[#e420ef] w-[30%] pt-[30%] left-[20%] top-[30%] transform -translate-x-1/2 -translate-y-1/2"></div>
             <div className="gradient bg-gradient-to-br from-[#ff7800] to-[#1c71d8] w-[40%] pt-[40%] left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
@@ -252,9 +252,9 @@ const Home = () => {
               <InfiniteMovingCards items={testimonials} speed="slow" />
             </motion.div>
           </div>
-        </section>
+        </section> */}
 
-        <section className="pt-20 sm:pt-32 lg:pt-40 bg-background relative z-40">
+        {/* <section className="pt-20 sm:pt-32 lg:pt-40 bg-background relative z-40">
           <div className="background">
             <div className="gradient bg-gradient-to-br from-[#efdb0a] to-[#e420ef] w-[30%] pt-[30%] left-[20%] top-[35%] transform -translate-x-1/2 -translate-y-1/2"></div>
             <div className="gradient bg-gradient-to-br from-[#ff7800] to-[#1c71d8] w-[40%] pt-[40%] left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
@@ -294,11 +294,11 @@ const Home = () => {
               <FAQAccordion />
             </motion.div>
           </div>
-        </section>
+        </section> */}
 
         <Footer />
       </main>
-    </>
+    </div>
   );
 };
 

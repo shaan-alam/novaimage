@@ -30,10 +30,10 @@ const DeleteTransformationDialog = ({
       loading: "Deleting...",
       success: (result) => {
         router.push("/dashboard");
-        return <>{result[0]?.message}</>;
+        return <div>{result[0]?.message}</div>;
       },
       error: (err) => {
-        return <>Could not delete your image!</>;
+        return <div>Could not delete your image!</div>;
       },
     });
   };

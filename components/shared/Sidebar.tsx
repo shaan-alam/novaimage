@@ -111,9 +111,21 @@ export default function Sidebar({ user }: { user: User }) {
                     </Button>
                   </Link>
                 </div>
+                <div className="animate-collapsible">
+                  <Link href="/image-gen">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full justify-start px-1 h-9 text-sm hover:bg-primary hover:text-primary-foreground text-primary/80"
+                    >
+                      <IconSparkles className="w-5 h-5 mr-2" />
+                      AI Image Generation
+                    </Button>
+                  </Link>
+                </div>
               </CollapsibleContent>
             </Collapsible>
-            <ul>
+            {/* <ul>
               <li className="mt-2">
                 <Button
                   variant="ghost"
@@ -125,7 +137,7 @@ export default function Sidebar({ user }: { user: User }) {
                   </span>
                 </Button>
               </li>
-            </ul>
+            </ul> */}
           </nav>
         </aside>
       </SidebarBody>

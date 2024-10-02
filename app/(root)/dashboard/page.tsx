@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import MyTransformations from "@/components/Dashboard/MyTransformations";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 import MyImageGenerations from "@/components/Dashboard/MyImageGenerations";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { motion } from "framer-motion";
 
 export default function Dashboard() {
   const aiTools = [
@@ -61,33 +63,50 @@ export default function Dashboard() {
           <TabsContent value="ai-tools">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
               {aiTools.map((tool, index) => (
-                <Card
-                  key={index}
-                  className="flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                <motion.div
+                  initial={{
+                    scale: 0.85,
+                    opacity: 0,
+                    filter: "blur(10px)",
+                  }}
+                  animate={{
+                    scale: 1,
+                    opacity: 1,
+                    filter: "blur(0px)",
+                  }}
+                  transition={{
+                    duration: 0.5,
+                    ease: "easeOut",
+                  }}
                 >
-                  <div className="relative aspect-square">
-                    <Image
-                      src={tool.image}
-                      alt={tool.title}
-                      layout="fill"
-                      objectFit="cover"
-                      className="transition-transform duration-300 hover:scale-105"
-                    />
-                  </div>
-                  <div className="flex flex-col justify-between flex-grow p-6">
-                    <CardHeader className="p-0">
-                      <CardTitle className="text-2xl mb-2">
-                        {tool.title}
-                      </CardTitle>
-                      <CardDescription>{tool.description}</CardDescription>
-                    </CardHeader>
-                    <CardFooter className="p-0 pt-4">
-                      <Link href={tool.link} className="w-full">
-                        <Button className="w-full">Use Tool</Button>
-                      </Link>
-                    </CardFooter>
-                  </div>
-                </Card>
+                  <Card
+                    key={index}
+                    className="flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                  >
+                    <div className="relative aspect-square">
+                      <Image
+                        src={tool.image}
+                        alt={tool.title}
+                        layout="fill"
+                        objectFit="cover"
+                        className="transition-transform duration-300 hover:scale-105"
+                      />
+                    </div>
+                    <div className="flex flex-col justify-between flex-grow p-6">
+                      <CardHeader className="p-0">
+                        <CardTitle className="text-2xl mb-2">
+                          {tool.title}
+                        </CardTitle>
+                        <CardDescription>{tool.description}</CardDescription>
+                      </CardHeader>
+                      <CardFooter className="p-0 pt-4">
+                        <Link href={tool.link} className="w-full">
+                          <Button className="w-full">Use Tool</Button>
+                        </Link>
+                      </CardFooter>
+                    </div>
+                  </Card>
+                </motion.div>
               ))}
             </div>
             <p className="text-muted-foreground text-sm mt-8 text-center">
